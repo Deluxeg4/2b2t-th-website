@@ -3,12 +3,11 @@ export default {
     const url = new URL(request.url);
     const host = url.hostname.toLowerCase();
 
-    const shouldRedirectToWww =
-      host === "2b2t-th.org" ||
-      (host.endsWith(".2b2t-th.org") && host !== "www.2b2t-th.org");
+    const shouldRedirectToRoot =
+      host !== "2b2t-th.org" && host.endsWith(".2b2t-th.org");
 
-    if (shouldRedirectToWww) {
-      url.hostname = "www.2b2t-th.org";
+    if (shouldRedirectToRoot) {
+      url.hostname = "2b2t-th.org";
       return Response.redirect(url.toString(), 301);
     }
 
