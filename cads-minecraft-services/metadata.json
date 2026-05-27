@@ -1,0 +1,6 @@
+{
+  "name": "CADS Minecraft Services",
+  "description": "เว็บไซต์สำหรับรับจ้างทำ Project เกี่ยวกับ Minecraft ไม่ว่าจะเป็นการสร้าง Map, เขียน Plugin หรือตั้งค่า Server ภายใต้แบรนด์ CADS",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

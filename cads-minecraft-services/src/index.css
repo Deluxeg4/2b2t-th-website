@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Kanit:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Kanit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-zinc-50 text-zinc-900 antialiased selection:bg-zinc-900 selection:text-white;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-zinc-900 text-white font-medium rounded-lg hover:bg-zinc-800 transition-all duration-200;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-zinc-200 text-zinc-900 font-medium rounded-lg hover:bg-zinc-100 transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply border border-zinc-100 bg-white p-8 rounded-2xl hover:border-zinc-200 hover:shadow-xl hover:shadow-zinc-200/50 transition-all duration-300;
+  }
+}
