@@ -3,6 +3,20 @@
   "name": "2b2t-th-website",
   "main": "./worker/index.js",
   "compatibility_date": "2026-05-27",
+  "routes": [
+    {
+      "pattern": "2b2t-th.org/*",
+      "zone_name": "2b2t-th.org"
+    },
+    {
+      "pattern": "www.2b2t-th.org/*",
+      "zone_name": "2b2t-th.org"
+    },
+    {
+      "pattern": "*.2b2t-th.org/*",
+      "zone_name": "2b2t-th.org"
+    }
+  ],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
