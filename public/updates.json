@@ -1,86 +1,117 @@
 [
   {
-    "date": "May 5, 2026 12:56 AM",
-    "message": "Server ได้ Support ผู้เล่นจาก version 26.1.2 เรียบร้อยแล้ว แต่ทาง ตัวระบบ Engine ของเกมยังคงใช้ 1.21.11 อยู่เพื่อรอความเสถียรของ Engine version 26.1.2 ต่อไป และผู้เล่น 1.21.11 ยังสามารถเข้าเกมและเล่นได้ตามปกติครับ"
+    "date": "May 31, 2026",
+    "message": "อย่างไรก็ตาม ทางทีมงานได้ตัดสินใจปิดปรับปรุงเซิร์ฟเวอร์เป็นระยะเวลานาน\nประมาณ 3–4 เดือน โดยคาดว่าจะกลับมาเปิดอีกครั้งภายในสิ้นเดือนสิงหาคม\nเพื่อทำการพัฒนา แก้ไข และปรับปรุงหลายสิ่งที่ไม่สามารถทำได้ในช่วงที่เซิร์ฟเวอร์เปิดให้บริการตามปกติ",
+    "messageEn": "The team has decided to take the server offline for a longer maintenance period of around 3-4 months.\nWe expect the server to reopen by the end of August.\nThis maintenance period will be used for development, fixes, and improvements that cannot be done while the server is normally online."
+  },
+  {
+    "date": "May 9, 2026 9:20 PM",
+    "message": "ทางเซิร์ฟเวอร์ได้มีการปรับปรุงโครงสร้างระบบ Login เล็กน้อยครับ\nผู้เล่นที่ใช้ไอดีเถื่อน (cracked) หรือเล่นผ่าน Platform OFFLINE จะยังสามารถเล่นได้ตามปกติ\nผู้เล่นไอดีเถื่อน (cracked) หรือเล่นผ่าน Platform OFFLINE ที่ใช้ชื่อที่มีเจ้าของแล้ว จะโดนปิดไม่ให้เข้าเล่น\nทางที่ดีให้เช็คให้แน่ใจว่าจะไม่ใช้ชื่อซ้ำผ่าน Platform https://namemc.com/\nตอนนี้ทาง Admin จะละเว้นให้สำหรับคนที่ยังใช้ชื่อซ้ำกับ ID แท้ ให้ติดต่อใน Ticket เพื่อทำการย้ายของและเปลี่ยนชื่อในอนาคต\nระบบนี้ออกแบบมาเพื่อป้องกันการแอบอ้างชื่อ ถ้ามีผลกระทบใดๆ ก็ต้องขออภัยด้วยครับ",
+    "messageEn": "The server has made a small update to the login system structure.\nPlayers using cracked accounts or playing through an OFFLINE platform can still play normally.\nHowever, cracked/OFFLINE players using a name that is already owned by a premium account will be blocked from joining.\nPlease make sure your name is not already taken by checking https://namemc.com/\nFor now, admins will make exceptions for players who are still using names that conflict with premium IDs. Please contact us through a ticket so your items can be moved and your name can be changed in the future.\nThis system is designed to prevent name impersonation. We apologize for any inconvenience this may cause."
+  },
+  {
+    "date": "May 7, 2026 12:56 AM",
+    "message": "Server ได้ Support ผู้เล่นจาก version 26.1.2 เรียบร้อยแล้ว แต่ทาง ตัวระบบ Engine ของเกมยังคงใช้ 1.21.11 อยู่เพื่อรอความเสถียรของ Engine version 26.1.2 ต่อไป และผู้เล่น 1.21.11 ยังสามารถเข้าเกมและเล่นได้ตามปกติครับ",
+    "messageEn": "The server now supports players from version 26.1.2. However, the game engine is still running on 1.21.11 while we wait for the 26.1.2 engine to become more stable. Players on 1.21.11 can still join and play normally."
   },
   {
     "date": "May 4, 2026 10:05 PM",
-    "message": "เซิร์ฟเวอร์จะทำการ patch Nether-Roof ภายในวันที่ 6 May 2026 ขอให้ผู้เล่นที่มีของ หรือสิ่งปลูกสร้างอยุ่ด้านบน ให้เก็บไว้ด้วยครับ เพราะว่า เราจะทำการ WorldEdit ออกไป"
+    "message": "เซิร์ฟเวอร์จะทำการ patch Nether-Roof ภายในวันที่ 6 May 2026 ขอให้ผู้เล่นที่มีของ หรือสิ่งปลูกสร้างอยุ่ด้านบน ให้เก็บไว้ด้วยครับ เพราะว่า เราจะทำการ WorldEdit ออกไป",
+    "messageEn": "The server will patch the Nether roof by May 6, 2026. Players who have items or builds above the Nether roof should move them, because we will remove that area using WorldEdit."
   },
   {
     "date": "May 4, 2026 8:54 PM",
-    "message": "ขอทำการ ปรับปรุงเซิร์ฟเวอร์ก่อนนะครับ เพราะ ได้มีการ รายงานเรื่อง Performance ที่ค่อนข้างแย่ เดี๋ยวจะมีกำหนดการมาอีกทีครับ สำหรับการเปิดอีกรอบ"
+    "message": "ขอทำการ ปรับปรุงเซิร์ฟเวอร์ก่อนนะครับ เพราะ ได้มีการ รายงานเรื่อง Performance ที่ค่อนข้างแย่ เดี๋ยวจะมีกำหนดการมาอีกทีครับ สำหรับการเปิดอีกรอบ",
+    "messageEn": "We will temporarily perform server maintenance due to reports of poor performance. A reopening schedule will be announced later."
   },
   {
     "date": "April 30, 2026 3:12 AM",
-    "message": "ขณะนี้ทางเซิร์ฟเวอร์ได้ทำการเปลี่ยนServer Runจาก Paper ไปเป็น Folia เพื่อทดสอบประสิทธิภาพในการทำงาน\nหากผลการทดสอบออกมาดีและเสถียร จะมีการใช้งาน Folia ต่อไปในระยะยาว\nแต่หากพบปัญหาหรือประสิทธิภาพไม่เป็นไปตามที่คาดหวัง ทางทีมงานจะดำเนินการกลับไปใช้ Paper ตามเดิม\nขอขอบคุณทุกท่านที่ให้ความร่วมมือและช่วยทดสอบระบบในช่วงนี้"
+    "message": "ขณะนี้ทางเซิร์ฟเวอร์ได้ทำการเปลี่ยนServer Runจาก Paper ไปเป็น Folia เพื่อทดสอบประสิทธิภาพในการทำงาน\nหากผลการทดสอบออกมาดีและเสถียร จะมีการใช้งาน Folia ต่อไปในระยะยาว\nแต่หากพบปัญหาหรือประสิทธิภาพไม่เป็นไปตามที่คาดหวัง ทางทีมงานจะดำเนินการกลับไปใช้ Paper ตามเดิม\nขอขอบคุณทุกท่านที่ให้ความร่วมมือและช่วยทดสอบระบบในช่วงนี้",
+    "messageEn": "The server has changed its runtime from Paper to Folia to test performance.\nIf the test results are good and stable, Folia may be used long term.\nIf problems are found or performance does not meet expectations, the team will switch back to Paper.\nThank you everyone for helping test the system during this period."
   },
   {
     "date": "May 3, 2026",
-    "message": "Website Update:\nเพิ่มหน้า Updates ให้สามารถติดตามข่าวสารและประวัติการอัปเดตของเซิร์ฟเวอร์ได้\nเพิ่มข้อมูล Connection Guide สำหรับผู้เล่นใหม่ทั้งแบบ Java และ Bedrock Edition"
+    "message": "Website Update:\nเพิ่มหน้า Updates ให้สามารถติดตามข่าวสารและประวัติการอัปเดตของเซิร์ฟเวอร์ได้\nเพิ่มข้อมูล Connection Guide สำหรับผู้เล่นใหม่ทั้งแบบ Java และ Bedrock Edition",
+    "messageEn": "Website Update:\nAdded an Updates page so players can follow server news and update history.\nAdded a Connection Guide for new players on both Java Edition and Bedrock Edition."
   },
   {
     "date": "May 1, 2026 10:05 PM",
-    "message": "เวลา 10:00-11:20 PMจะมีการปิดเพื่อเพิ่มPerformance Server ละแก้Bugต่างๆ ครับ"
+    "message": "เวลา 10:00-11:20 PMจะมีการปิดเพื่อเพิ่มPerformance Server ละแก้Bugต่างๆ ครับ",
+    "messageEn": "The server will be offline from 10:00-11:20 PM to improve performance and fix various bugs."
   },
   {
     "date": "May 1, 2026 3:56 PM",
-    "message": "เซิร์ฟเวอร์ได้มีการแก้ใข Performance เซิร์ฟเวอร์จะทำการ Restart ใน เวลา 16:30 เพื่อทำการ Apply การแก้ใข"
+    "message": "เซิร์ฟเวอร์ได้มีการแก้ใข Performance เซิร์ฟเวอร์จะทำการ Restart ใน เวลา 16:30 เพื่อทำการ Apply การแก้ใข",
+    "messageEn": "Server performance fixes have been made. The server will restart at 16:30 to apply the changes."
   },
   {
     "date": "May 1, 2026 1:11 PM",
-    "message": "เซิร์ฟเวอร์ได้มีการแก้ใข Attribute Swapping , Remote Stasis Chamber เรียบร้อยแล้ว\nเซิร์ฟเวอร์จะทำการ Restart ใน เวลา 13:30 เพื่อทำการ Apply การแก้ใข"
+    "message": "เซิร์ฟเวอร์ได้มีการแก้ใข Attribute Swapping , Remote Stasis Chamber เรียบร้อยแล้ว\nเซิร์ฟเวอร์จะทำการ Restart ใน เวลา 13:30 เพื่อทำการ Apply การแก้ใข",
+    "messageEn": "Attribute Swapping and Remote Stasis Chamber have been fixed.\nThe server will restart at 13:30 to apply the changes."
   },
   {
     "date": "April 30, 2026 3:12 AM",
-    "message": "ขณะนี้ทางเซิร์ฟเวอร์ได้ทำการเปลี่ยนServer Runจาก Paper ไปเป็น Folia เพื่อทดสอบประสิทธิภาพในการทำงาน\nหากผลการทดสอบออกมาดีและเสถียร จะมีการใช้งาน Folia ต่อไปในระยะยาว\nแต่หากพบปัญหาหรือประสิทธิภาพไม่เป็นไปตามที่คาดหวัง ทางทีมงานจะดำเนินการกลับไปใช้ Paper ตามเดิม\nขอขอบคุณทุกท่านที่ให้ความร่วมมือและช่วยทดสอบระบบในช่วงนี้"
+    "message": "ขณะนี้ทางเซิร์ฟเวอร์ได้ทำการเปลี่ยนServer Runจาก Paper ไปเป็น Folia เพื่อทดสอบประสิทธิภาพในการทำงาน\nหากผลการทดสอบออกมาดีและเสถียร จะมีการใช้งาน Folia ต่อไปในระยะยาว\nแต่หากพบปัญหาหรือประสิทธิภาพไม่เป็นไปตามที่คาดหวัง ทางทีมงานจะดำเนินการกลับไปใช้ Paper ตามเดิม\nขอขอบคุณทุกท่านที่ให้ความร่วมมือและช่วยทดสอบระบบในช่วงนี้",
+    "messageEn": "The server has changed its runtime from Paper to Folia to test performance.\nIf the test results are good and stable, Folia may be used long term.\nIf problems are found or performance does not meet expectations, the team will switch back to Paper.\nThank you everyone for helping test the system during this period."
   },
   {
     "date": "April 29, 2026 8:17 PM",
-    "message": "เซิร์ฟเวอร์เปิดแล้วนะ แต่จะมีการปรับปรุงต่อตอนเวลา เที่ยงคืนวันนี้ครับ\nตอนนี้ระหว่างเล่นอาจจะมีอาการหน่วงเป็นบางช่วงนะ ต้องขออภัยด้วย"
+    "message": "เซิร์ฟเวอร์เปิดแล้วนะ แต่จะมีการปรับปรุงต่อตอนเวลา เที่ยงคืนวันนี้ครับ\nตอนนี้ระหว่างเล่นอาจจะมีอาการหน่วงเป็นบางช่วงนะ ต้องขออภัยด้วย",
+    "messageEn": "The server is now open, but further maintenance will take place at midnight today.\nThere may be some lag while playing for now. We apologize for the inconvenience."
   },
   {
     "date": "April 28, 2026 11:39 PM",
-    "message": "แจ้งกำหนดการแก้ bug ตอนนี้เซิร์ฟเวอร์จะเปิดอีกทีใน เวลา เที่ยงคืนของวันนี้ครับ"
+    "message": "แจ้งกำหนดการแก้ bug ตอนนี้เซิร์ฟเวอร์จะเปิดอีกทีใน เวลา เที่ยงคืนของวันนี้ครับ",
+    "messageEn": "Bug fix schedule update: the server is expected to reopen at midnight today."
   },
   {
     "date": "April 25, 2026 9:59 PM",
-    "message": "Bedrock แก้ปัญหา Movement เรียบร้อยแล้วครับ"
+    "message": "Bedrock แก้ปัญหา Movement เรียบร้อยแล้วครับ",
+    "messageEn": "The Bedrock movement issue has been fixed."
   },
   {
     "date": "April 24, 2026 9:08 PM",
-    "message": "พรุ่งนี้จะมีการปรับปรุงและแก้ไขเซิร์ฟเวอร์ Bedrock ขออภัยในความไม่สะดวกครับ"
+    "message": "พรุ่งนี้จะมีการปรับปรุงและแก้ไขเซิร์ฟเวอร์ Bedrock ขออภัยในความไม่สะดวกครับ",
+    "messageEn": "There will be maintenance and fixes for the Bedrock server tomorrow. We apologize for the inconvenience."
   },
   {
     "date": "April 14, 2026 2:48 PM",
-    "message": "เซิฟเปิดให้บริการตามปกติละครับ"
+    "message": "เซิฟเปิดให้บริการตามปกติละครับ",
+    "messageEn": "The server is now open as usual."
   },
   {
     "date": "April 14, 2026 2:37 PM",
-    "message": "เนื่องจากมีการรายงาน Bug มา ทีมงาน ขอ Restart Server เพื่อ ตรวจสอบ การแก้บัค\nของเซิร์ฟเวอร์ครับ ช่วงเวลา 14:40 - 14:50 ครับ"
+    "message": "เนื่องจากมีการรายงาน Bug มา ทีมงาน ขอ Restart Server เพื่อ ตรวจสอบ การแก้บัค\nของเซิร์ฟเวอร์ครับ ช่วงเวลา 14:40 - 14:50 ครับ",
+    "messageEn": "Due to a bug report, the team will restart the server to check the fix.\nThe restart window is 14:40-14:50."
   },
   {
     "date": "April 14, 2026 2:16 PM",
-    "message": "ขอเลื่อน ปรับปรุงไปก่อน ครับ"
+    "message": "ขอเลื่อน ปรับปรุงไปก่อน ครับ",
+    "messageEn": "Maintenance has been postponed for now."
   },
   {
     "date": "April 14, 2026 1:43 PM",
-    "message": "ขอปรับปรุง ระบบ Network สำหรับ เซิฟเวอร์ สั้นๆ ช่วง 14:00 - 14:10 ครับ"
+    "message": "ขอปรับปรุง ระบบ Network สำหรับ เซิฟเวอร์ สั้นๆ ช่วง 14:00 - 14:10 ครับ",
+    "messageEn": "There will be a short server network maintenance window from 14:00-14:10."
   },
   {
     "date": "April 14, 2026 1:05 AM",
-    "message": "เนื่องจากมีการรายงาน Bug มา ทีมงาน ได้แก้ไขเรียบร้อยแล้วครับ"
+    "message": "เนื่องจากมีการรายงาน Bug มา ทีมงาน ได้แก้ไขเรียบร้อยแล้วครับ",
+    "messageEn": "A bug was reported, and the team has fixed it."
   },
   {
     "date": "April 14, 2026 12:45 AM",
-    "message": "ขอปรับปรุง ระบบ Network สั้นๆสำหรับเซิฟเวอร์ Survival ครับ 00:45-00:50\nเซิฟเปิดให้บริการตามปกติละครับ"
+    "message": "ขอปรับปรุง ระบบ Network สั้นๆสำหรับเซิฟเวอร์ Survival ครับ 00:45-00:50\nเซิฟเปิดให้บริการตามปกติละครับ",
+    "messageEn": "There will be a short network maintenance window for the Survival server from 00:45-00:50.\nThe server is now open as usual."
   },
   {
     "date": "April 13, 2026 12:15 PM",
-    "message": "เซิฟเปิดให้บริการตามปกติละครับ"
+    "message": "เซิฟเปิดให้บริการตามปกติละครับ",
+    "messageEn": "The server is now open as usual."
   },
   {
     "date": "April 13, 2026 11:37 AM",
-    "message": "เซิร์ฟเวอร์จะทำการ ปิดปรับปรุงสั้นๆครับ ในช่วง 12:00 - 12:15 ครับ\nถ้าการแก้ใขไวกว่านี้อาจจะเร่งเปิดก่อนได้ครับ\nขออภัยในความไม่สะดวก"
+    "message": "เซิร์ฟเวอร์จะทำการ ปิดปรับปรุงสั้นๆครับ ในช่วง 12:00 - 12:15 ครับ\nถ้าการแก้ใขไวกว่านี้อาจจะเร่งเปิดก่อนได้ครับ\nขออภัยในความไม่สะดวก",
+    "messageEn": "The server will be briefly offline for maintenance from 12:00-12:15.\nIf the fix is completed earlier, the server may reopen sooner.\nWe apologize for the inconvenience."
   }
 ]

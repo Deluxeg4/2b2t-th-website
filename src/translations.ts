@@ -8,8 +8,11 @@ export const translations = {
       connectionGuide: "Connection Guide",
       serverStability: "Server Stability",
       about: "About",
+      partner: "Partner",
       shop: "Shop",
-      comingSoon: "Coming soon"
+      comingSoon: "Coming soon",
+      shopComingSoonTitle: "Shop coming soon",
+      shopComingSoonDesc: "The shop is not available yet. Please check back later."
     },
     home: {
       newsUpdates: "News & Updates",
@@ -126,9 +129,9 @@ export const translations = {
     },
     about: {
       title: "About",
-      desc1: "2b2t Thailand is a Minecraft anarchy server inspired by the original 2b2t experience...",
-      desc2: "Officially opened on April 10, 2026...",
-      desc3: "Whether you are exploring ruins near spawn..."
+      desc1: "2b2t Thailand is a Minecraft anarchy server officially opened on April 10, 2026, where players are free to build, explore, farm, fight, survive, and shape the world in their own way.",
+      desc2: "The server is inspired by 2b2t, the long-running Minecraft server that has been online since 2010 and is known for its deep, chaotic, and complex player-driven history.",
+      desc3: "Our goal is to give Thai players a similar anarchy experience with lower ping, no long queue, support for offline/cracked accounts, and crossplay between Java Edition and Bedrock Edition. The server is hosted in Thailand, open 24/7, and operated without a profit-focused purpose."
     }
   },
   th: {
@@ -138,10 +141,13 @@ export const translations = {
       modifications: "การปรับแต่ง",
       commands: "คำสั่ง",
       connectionGuide: "วิธีเข้าเล่น",
-      serverStability: "ความเสถียรของเซิร์ฟเวอร์",
+      serverStability: "เสถียรภาพเซิร์ฟเวอร์",
       about: "เกี่ยวกับ",
+      partner: "พาร์ทเนอร์",
       shop: "ร้านค้า",
-      comingSoon: "เร็วๆ นี้"
+      comingSoon: "เร็วๆ นี้",
+      shopComingSoonTitle: "ร้านค้ายังไม่เปิดให้บริการ",
+      shopComingSoonDesc: "ระบบร้านค้ายังไม่พร้อมใช้งานในตอนนี้ กรุณากลับมาตรวจสอบใหม่ภายหลัง"
     },
     home: {
       newsUpdates: "ข่าวสารและอัปเดต",
@@ -258,9 +264,9 @@ export const translations = {
     },
     about: {
       title: "เกี่ยวกับ",
-      desc1: "2b2t Thailand คือเซิร์ฟเวอร์ Minecraft แนว Anarchy ที่ได้รับแรงบันดาลใจจากประสบการณ์ดั้งเดิมของ 2b2t...",
-      desc2: "เปิดให้บริการอย่างเป็นทางการเมื่อวันที่ 10 เมษายน 2026...",
-      desc3: "ไม่ว่าคุณจะกำลังสำรวจซากปรักหักพังใกล้จุดเกิด..."
+      desc1: "2b2t Thailand คือเซิร์ฟเวอร์ Minecraft แนว Anarchy หรือเซิร์ฟเวอร์ไร้กฎ เปิดให้บริการอย่างเป็นทางการเมื่อวันที่ 10 เมษายน 2026 ผู้เล่นสามารถเลือกใช้ชีวิตในโลกได้อย่างอิสระ ไม่ว่าจะเป็นการสร้างบ้าน สำรวจโลก ทำฟาร์ม ต่อสู้ PvP หรือเอาตัวรอดในแบบของตัวเอง",
+      desc2: "เซิร์ฟเวอร์นี้ได้รับแรงบันดาลใจจาก 2b2t ซึ่งเปิดให้บริการมาตั้งแต่ปี 2010 และเป็นที่รู้จักจากประวัติศาสตร์อันยาวนาน ซับซ้อน และเต็มไปด้วยเรื่องราวที่เกิดจากผู้เล่น",
+      desc3: "เป้าหมายของเราคือให้ผู้เล่นชาวไทยได้สัมผัสประสบการณ์แนวเดียวกัน โดยไม่ต้องกังวลเรื่องการใช้ไอดีแท้ การรอคิวนาน หรือปัญหา Network Ping เซิร์ฟเวอร์เปิดให้บริการในประเทศไทยแบบ 24/7 เพื่อให้ได้ค่า Ping ที่ต่ำและเสถียร รองรับทั้ง Java Edition และ Bedrock Edition และเปิดให้บริการโดยไม่มีจุดประสงค์ในการแสวงหาผลกำไร"
     }
   }
 };
