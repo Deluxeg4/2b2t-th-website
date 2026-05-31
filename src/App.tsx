@@ -450,6 +450,9 @@ function About({ lang }: { lang: 'en' | 'th' }) {
 
 function Partner({ lang }: { lang: 'en' | 'th' }) {
   const [showDiscordPopup, setShowDiscordPopup] = useState(false);
+  const [showMinecraftWebsitePopup, setShowMinecraftWebsitePopup] = useState(false);
+  const [showCadsmcWebsitePopup, setShowCadsmcWebsitePopup] = useState(false);
+  const [showCadsmcDiscordPopup, setShowCadsmcDiscordPopup] = useState(false);
   const isThai = lang === 'th';
   const minecraftThMessageTh = `ตอนนี้ 2B2T Thailand ได้เข้าร่วมเป็น Partner กับ MINECRAFT TH แล้ว!
 
@@ -539,14 +542,13 @@ https://discord.com/invite/xtVgj52nN6`;
             <LinkifiedMessage text={minecraftThMessage} />
           </div>
           <div className="p-5 md:p-6 pt-0 flex flex-col sm:flex-row gap-3">
-            <a
-              href="https://mc.in.th/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setShowMinecraftWebsitePopup(true)}
               className="h-11 px-4 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
             >
               {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
-            </a>
+            </button>
             <button
               type="button"
               onClick={() => setShowDiscordPopup(true)}
@@ -570,26 +572,71 @@ https://discord.com/invite/xtVgj52nN6`;
             <LinkifiedMessage text={cadsmcMessage} />
           </div>
           <div className="p-5 md:p-6 pt-0 flex flex-col sm:flex-row gap-3">
-            <a
-              href="https://dev.2b2t-th.org/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setShowCadsmcWebsitePopup(true)}
               className="h-11 px-4 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
             >
               {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
-            </a>
-            <a
-              href="https://discord.com/invite/xtVgj52nN6"
-              target="_blank"
-              rel="noopener noreferrer"
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowCadsmcDiscordPopup(true)}
               className="h-11 px-4 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center gap-2"
             >
               <MessageSquare size={18} />
               Discord
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      {showMinecraftWebsitePopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="minecraft-website-popup-title"
+          onClick={() => setShowMinecraftWebsitePopup(false)}
+        >
+          <div
+            className="w-full max-w-md bg-[#2f3136] border border-white/30 rounded-sm shadow-2xl p-6 text-white text-left"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-white text-black p-2 rounded-sm">
+                <Globe size={22} />
+              </div>
+              <div>
+                <h2 id="minecraft-website-popup-title" className="text-2xl font-bold tracking-wide">MINECRAFT TH Website</h2>
+                <p className="text-gray-400 text-sm">{isThai ? 'Community Minecraft ของคนไทย' : 'Thai Minecraft Community'}</p>
+              </div>
+            </div>
+            <p className="text-gray-300 mt-5 leading-relaxed">
+              {isThai
+                ? 'เปิดเว็บไซต์ MINECRAFT TH เพื่อดูข่าวสาร ชุมชน และรายละเอียดเพิ่มเติมของ Community Minecraft ไทย'
+                : 'Open the MINECRAFT TH website to view news, community details, and more information about the Thai Minecraft community.'}
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://mc.in.th/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 flex-1 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
+              >
+                {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowMinecraftWebsitePopup(false)}
+                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
+              >
+                {isThai ? 'ปิด' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showDiscordPopup && (
         <div
@@ -637,6 +684,100 @@ https://discord.com/invite/xtVgj52nN6`;
           </div>
         </div>
       )}
+
+      {showCadsmcWebsitePopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cadsmc-website-popup-title"
+          onClick={() => setShowCadsmcWebsitePopup(false)}
+        >
+          <div
+            className="w-full max-w-md bg-[#2f3136] border border-white/30 rounded-sm shadow-2xl p-6 text-white text-left"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-white text-black p-2 rounded-sm">
+                <Globe size={22} />
+              </div>
+              <div>
+                <h2 id="cadsmc-website-popup-title" className="text-2xl font-bold tracking-wide">CADS Studio Website</h2>
+                <p className="text-gray-400 text-sm">{isThai ? 'เว็บไซต์บริการ Minecraft Server' : 'Minecraft server services website'}</p>
+              </div>
+            </div>
+            <p className="text-gray-300 mt-5 leading-relaxed">
+              {isThai
+                ? 'เปิดเว็บไซต์ CADS Studio เพื่อดูรายละเอียดบริการ ติดต่อทีมงาน หรือเริ่มคุยโปรเจกต์ Minecraft Server'
+                : 'Open the CADS Studio website to view service details, contact the team, or start a Minecraft server project.'}
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://dev.2b2t-th.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 flex-1 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
+              >
+                {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowCadsmcWebsitePopup(false)}
+                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
+              >
+                {isThai ? 'ปิด' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCadsmcDiscordPopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cadsmc-discord-popup-title"
+          onClick={() => setShowCadsmcDiscordPopup(false)}
+        >
+          <div
+            className="w-full max-w-md bg-[#2f3136] border border-[#5865F2]/60 rounded-sm shadow-2xl p-6 text-white text-left"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-[#5865F2] p-2 rounded-sm">
+                <MessageSquare size={22} />
+              </div>
+              <div>
+                <h2 id="cadsmc-discord-popup-title" className="text-2xl font-bold tracking-wide">CADS Studio Discord</h2>
+                <p className="text-gray-400 text-sm">{isThai ? 'ติดต่อทีม CADS Studio' : 'Contact CADS Studio'}</p>
+              </div>
+            </div>
+            <p className="text-gray-300 mt-5 leading-relaxed">
+              {isThai
+                ? 'เข้าร่วม Discord ของ CADS Studio เพื่อสอบถามบริการ ขอคำปรึกษา หรือเริ่มคุยโปรเจกต์ Minecraft Server'
+                : 'Join the CADS Studio Discord to ask about services, request advice, or start a Minecraft server project.'}
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://discord.com/invite/xtVgj52nN6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 flex-1 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center"
+              >
+                {isThai ? 'เปิด Discord' : 'Open Discord'}
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowCadsmcDiscordPopup(false)}
+                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
+              >
+                {isThai ? 'ปิด' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -644,6 +785,7 @@ https://discord.com/invite/xtVgj52nN6`;
 function Contact({ lang }: { lang: 'en' | 'th' }) {
   const isThai = lang === 'th';
   const [copiedContact, setCopiedContact] = useState<string | null>(null);
+  const [showTicketPopup, setShowTicketPopup] = useState(false);
   const copyContact = (value: string) => {
     navigator.clipboard.writeText(value);
     setCopiedContact(value);
@@ -673,14 +815,13 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
               ? 'วิธีที่เร็วที่สุดในการติดต่อทีมงาน เปิด Ticket ใน Discord เพื่อแจ้งปัญหา ขอความช่วยเหลือ หรือสอบถามเรื่องบัญชีและการเข้าเล่น'
               : 'The fastest way to reach the team. Open a ticket in Discord for issues, help requests, account questions, or connection support.'}
           </p>
-          <a
-            href="https://discord.gg/mcth"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => setShowTicketPopup(true)}
             className="mt-5 h-11 px-4 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center"
           >
             {isThai ? 'เปิด Discord' : 'Open Discord'}
-          </a>
+          </button>
         </div>
 
         <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
@@ -761,6 +902,53 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
           </a>
         </div>
       </div>
+
+      {showTicketPopup && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ticket-popup-title"
+          onClick={() => setShowTicketPopup(false)}
+        >
+          <div
+            className="w-full max-w-md bg-[#2f3136] border border-[#5865F2]/60 rounded-sm shadow-2xl p-6 text-white text-left"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-[#5865F2] p-2 rounded-sm">
+                <MessageSquare size={22} />
+              </div>
+              <div>
+                <h2 id="ticket-popup-title" className="text-2xl font-bold tracking-wide">2b2t-th Ticket</h2>
+                <p className="text-gray-400 text-sm">{isThai ? 'Support Discord Channel' : 'Support Discord Channel'}</p>
+              </div>
+            </div>
+            <p className="text-gray-300 mt-5 leading-relaxed">
+              {isThai
+                ? 'เปิดช่อง Ticket ใน Discord เพื่อแจ้งปัญหา ขอความช่วยเหลือ หรือสอบถามเรื่องบัญชีและการเข้าเล่น'
+                : 'Open the Discord ticket channel for issues, help requests, account questions, or connection support.'}
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://discord.com/channels/1348603803162640414/1375433127702429787"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-11 flex-1 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center"
+              >
+                {isThai ? 'เปิด Ticket' : 'Open Ticket'}
+              </a>
+              <button
+                type="button"
+                onClick={() => setShowTicketPopup(false)}
+                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
+              >
+                {isThai ? 'ปิด' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
