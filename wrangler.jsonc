@@ -1,0 +1,41 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "2b2t-th-website",
+	"main": "./worker/index.js",
+	"compatibility_date": "2026-05-27",
+	"triggers": {
+		"crons": [
+			"*/5 * * * *"
+		]
+	},
+	"kv_namespaces": [
+		{
+			"binding": "STATUS_KV",
+			"id": "a267c28e7edc4a17a0202c3617f67e6d"
+		}
+	],
+	"routes": [
+		{
+			"pattern": "2b2t-th.org/*",
+			"zone_name": "2b2t-th.org"
+		},
+		{
+			"pattern": "www.2b2t-th.org/*",
+			"zone_name": "2b2t-th.org"
+		},
+		{
+			"pattern": "status.2b2t-th.org/*",
+			"zone_name": "2b2t-th.org"
+		},
+		{
+			"pattern": "*.2b2t-th.org/*",
+			"zone_name": "2b2t-th.org"
+		}
+	],
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"run_worker_first": true,
+		"not_found_handling": "single-page-application"
+	}
+}
