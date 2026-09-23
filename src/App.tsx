@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, CheckCircle2, Bell, Activity } from 'lucide-react';
+import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, CheckCircle2, Bell, Activity, Menu, X } from 'lucide-react';
 import { translations } from './translations';
 import logoImage from './assets/server-logo.png?url';
 
@@ -50,32 +50,14 @@ function getUpdateMessage(update: any, lang: 'en' | 'th') {
 
 
 function GameplayCarousel() {
-  const repeatCount = 21;
-  const startIndex = gameplayImages.length * Math.floor(repeatCount / 2);
-  const [currentIndex, setCurrentIndex] = useState(startIndex);
-  const trackImages = Array.from({ length: gameplayImages.length * repeatCount }, (_, index) => {
-    return gameplayImages[index % gameplayImages.length];
-  });
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const trackImages = gameplayImages;
 
   const scrollByImage = (direction: 'left' | 'right' = 'right') => {
     if (gameplayImages.length <= 1) return;
 
     const step = direction === 'left' ? -1 : 1;
-    setCurrentIndex((index) => {
-      const nextIndex = index + step;
-      const minIndex = gameplayImages.length * 2;
-      const maxIndex = gameplayImages.length * (repeatCount - 2);
-
-      if (nextIndex <= minIndex) {
-        return nextIndex + gameplayImages.length * Math.floor(repeatCount / 2);
-      }
-
-      if (nextIndex >= maxIndex) {
-        return nextIndex - gameplayImages.length * Math.floor(repeatCount / 2);
-      }
-
-      return nextIndex;
-    });
+    setCurrentIndex((index) => (index + step + gameplayImages.length) % gameplayImages.length);
   };
 
   useEffect(() => {
@@ -89,39 +71,41 @@ function GameplayCarousel() {
   }, []);
 
   return (
-    <div className="relative w-full bg-[#454545] rounded-sm shadow-lg p-4 text-white text-left">
+    <div className="relative w-full min-w-0 bg-[#454545] rounded-sm shadow-lg p-2 sm:p-4 text-white text-left">
       <button
         type="button"
         onClick={() => scrollByImage('left')}
         aria-label="Previous gameplay image"
-        className="absolute left-6 top-1/2 z-10 -translate-y-1/2 w-11 h-11 rounded-sm bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+        className="absolute left-3 sm:left-6 top-1/2 z-10 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
       >
-        <ChevronLeft size={26} />
+        <ChevronLeft size={22} />
       </button>
       <button
         type="button"
         onClick={() => scrollByImage('right')}
         aria-label="Next gameplay image"
-        className="absolute right-6 top-1/2 z-10 -translate-y-1/2 w-11 h-11 rounded-sm bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+        className="absolute right-3 sm:right-6 top-1/2 z-10 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-black/60 border border-white/20 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
       >
-        <ChevronRight size={26} />
+        <ChevronRight size={22} />
       </button>
       <div className="overflow-hidden rounded-sm">
         <div
-          className="flex transition-transform duration-200 ease-out"
+          className="flex w-full transition-transform duration-300 ease-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
           {trackImages.map((image, index) => (
             <div
               key={`${image}-${index}`}
-              className="shrink-0 w-full bg-[#353535] rounded-sm border border-[#555] overflow-hidden"
+              className="w-full flex-none bg-[#353535] rounded-sm border border-[#555] overflow-hidden"
             >
               <img
                 src={image}
                 alt={`Gameplay screenshot ${index + 1}`}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                width={1920}
+                height={1057}
+                loading={Math.abs(index - currentIndex) <= 1 ? 'eager' : 'lazy'}
                 draggable={false}
-                className="w-full aspect-video object-cover"
+                className="gameplay-screenshot block w-full aspect-video object-cover"
               />
             </div>
           ))}
@@ -131,10 +115,46 @@ function GameplayCarousel() {
   );
 }
 
+function ServerInfoCard({ lang, playerCount, handleCopyIp, copied }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean }) {
+  const t = translations[lang].home;
+  return (
+    <div className="w-full rounded-sm bg-[#454545] p-6 text-left text-white shadow-lg sm:p-8">
+      <div className="flex flex-col gap-5">
+        <h2 className="text-center text-3xl font-bold tracking-wide">{t.title}</h2>
+        <p className="text-[17px] leading-relaxed text-gray-300">{t.description}</p>
+        <div className="mt-1 flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
+          <div className="mt-1 flex w-full items-center gap-2 rounded-sm border border-[#555] bg-[#353535] px-4 py-2 sm:mt-0 sm:w-auto">
+            <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-green-500" />
+            <Users size={18} className="text-gray-300" />
+            <span className="whitespace-nowrap font-medium tracking-wide">{playerCount} {t.playingNow}</span>
+          </div>
+          <div className="group relative mt-1 w-full sm:mt-0 sm:w-auto">
+            <button
+              type="button"
+              onClick={handleCopyIp}
+              className="flex w-full items-center justify-center gap-2 rounded-sm bg-white px-5 py-2 font-bold text-black transition-colors hover:bg-gray-200 sm:w-auto"
+            >
+              {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
+              {t.copyIp}
+            </button>
+            <span className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-black px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              {copied ? t.copied : t.clickToCopy}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean, updates: any[], loadingUpdates: boolean }) {
   const t = translations[lang].home;
   return (
-    <div className="flex flex-col lg:flex-row gap-4 w-full">
+    <div className="flex w-full flex-col gap-4">
+      <div className="lg:hidden">
+        <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} />
+      </div>
+      <div className="flex w-full flex-col gap-4 lg:flex-row">
       {/* Left Side Area */}
       <div className="flex flex-col gap-4 w-full lg:flex-1">
         <GameplayCarousel />
@@ -161,32 +181,8 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
 
       {/* Right Side Area */}
       <div className="flex flex-col gap-4 w-full lg:w-[500px] shrink-0">
-        <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 text-white text-left">
-          <div className="flex flex-col gap-6">
-            <h2 className="text-3xl font-bold text-center tracking-wide">{t.title}</h2>
-            <p className="text-gray-300 text-[17px] leading-relaxed">
-              {t.description}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
-              <div className="flex items-center gap-2 bg-[#353535] px-4 py-2 rounded-sm border border-[#555] w-full sm:w-auto mt-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
-                <Users size={18} className="text-gray-300" />
-                <span className="font-medium tracking-wide whitespace-nowrap">{playerCount} {t.playingNow}</span>
-              </div>
-              <div className="relative group w-full sm:w-auto mt-2">
-                <button
-                  onClick={handleCopyIp}
-                  className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-sm font-bold hover:bg-gray-200 transition-colors w-full justify-center"
-                >
-                  {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
-                  {t.copyIp}
-                </button>
-                <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1.5 px-3 rounded-sm shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                  {copied ? t.copied : t.clickToCopy}
-                </span>
-              </div>
-            </div>
-          </div>
+        <div className="hidden lg:block">
+          <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} />
         </div>
         <div className="w-full bg-[#454545] rounded-sm shadow-lg p-6 text-white text-left">
           <div className="flex items-center gap-3 mb-4">
@@ -206,6 +202,7 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
             ></iframe>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
@@ -882,7 +879,7 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
     let mounted = true;
     const check = async () => {
       try {
-        const response = await fetch('https://www.2b2t-th.org/api/status', { cache: 'no-store' });
+        const response = await fetch('https://status.2b2t-th.org/api/status', { cache: 'no-store' });
         if (!response.ok) throw new Error('Status API unavailable');
         if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Status API returned non-JSON data');
         const data: LiveStatus = await response.json();
@@ -969,6 +966,7 @@ export default function App() {
   const [updates, setUpdates] = useState<any[]>([]);
   const [loadingUpdates, setLoadingUpdates] = useState(true);
   const [showShopPopup, setShowShopPopup] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const pathSegments = location.pathname.split('/').filter(Boolean);
@@ -1086,12 +1084,96 @@ export default function App() {
             </button>
           </div>
 
-          <div className="w-full h-auto min-h-20 py-2 bg-[#454545] rounded-sm shadow-lg flex flex-wrap md:flex-nowrap items-center px-4 md:px-5 gap-2 overflow-x-auto no-scrollbar justify-start">
+          <div className="relative w-full min-w-0">
+            <div className="relative flex w-full items-center justify-between gap-2 rounded-sm bg-[#454545] p-2 shadow-lg md:hidden">
+              <button
+                type="button"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-main-navigation"
+                onClick={() => setIsMobileMenuOpen((open) => !open)}
+                className="flex min-h-10 shrink-0 items-center gap-2 rounded-sm px-3 text-sm font-semibold text-white hover:bg-[#5a5a5a]"
+              >
+                <Menu size={18} />
+                {t.nav.menu}
+              </button>
+              <div className="ml-auto flex shrink-0 items-center gap-1">
+                <Link
+                  to={`${langPrefix}/partner`}
+                  className={`flex min-h-10 items-center justify-center whitespace-nowrap rounded-sm px-2.5 text-xs font-medium ${localizedPath === '/partner' ? 'bg-white text-black' : 'text-white hover:bg-[#5a5a5a]'}`}
+                >
+                  {t.nav.partner}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowShopPopup(true)}
+                  className="flex min-h-10 items-center justify-center whitespace-nowrap rounded-sm bg-[#3b82f6] px-2.5 text-xs font-medium text-white hover:bg-[#2563eb]"
+                >
+                  {t.nav.shop}
+                </button>
+              </div>
+            </div>
+            <div
+              className={`fixed inset-0 z-50 md:hidden ${isMobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+              aria-hidden={!isMobileMenuOpen}
+            >
+              <button
+                type="button"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
+                aria-label={isThai ? 'ปิดเมนู' : 'Close menu'}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`absolute inset-0 h-full w-full ${isMobileMenuOpen ? 'bg-black/35 backdrop-blur-sm' : 'bg-transparent backdrop-blur-0'}`}
+              />
+              <nav
+                id="mobile-main-navigation"
+                aria-label={isThai ? 'เมนูหลัก' : 'Main navigation'}
+                inert={!isMobileMenuOpen}
+                className={`absolute inset-y-0 left-0 flex h-full w-[80vw] flex-col overflow-y-auto bg-[#252525] px-6 pb-8 pt-[max(1.5rem,env(safe-area-inset-top))] text-white shadow-2xl transition-transform duration-[180ms] ease-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+              >
+                <div className="mb-8 flex items-center justify-between border-b border-white/15 pb-5">
+                  <span className="text-lg font-bold">{t.nav.menu}</span>
+                  <button
+                    type="button"
+                    aria-label={isThai ? 'ปิดเมนู' : 'Close menu'}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex h-11 w-11 items-center justify-center rounded-sm bg-white/10 hover:bg-white/20"
+                  >
+                    <X size={22} />
+                  </button>
+                </div>
+                <div className="flex flex-1 flex-col gap-2">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex min-h-12 items-center rounded-sm px-4 text-base font-medium ${localizedPath === item.matchPath ? 'bg-white text-black' : 'text-white hover:bg-white/10'}`}
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+                <div className="mt-6 border-t border-white/15 pt-5">
+                  <div className="mb-4 flex items-center gap-3 rounded-sm bg-white/5 px-4 py-3">
+                    <Users size={19} className="shrink-0 text-green-400" />
+                    <span className="text-sm font-medium">{playerCount} {t.home.playingNow}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyIp}
+                    className="flex min-h-12 w-full items-center justify-center gap-2 rounded-sm bg-white px-4 text-sm font-bold text-black transition-colors hover:bg-gray-200"
+                  >
+                    {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
+                    {copied ? t.home.copied : `${t.home.copyIp} · ${isThai ? 'คัดลอก IP' : 'Copy IP'}`}
+                  </button>
+                </div>
+              </nav>
+            </div>
+            <nav aria-label={isThai ? 'เมนูหลัก' : 'Main navigation'} className="hidden w-full min-w-0 items-center gap-2 overflow-x-auto rounded-sm bg-[#454545] px-4 py-2 shadow-lg no-scrollbar md:flex md:flex-nowrap">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`h-10 md:h-12 px-3 text-sm md:text-base rounded-sm font-medium transition-colors whitespace-nowrap shrink-0 flex items-center justify-center text-center ${localizedPath === item.matchPath
+                className={`min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center ${localizedPath === item.matchPath
                     ? 'bg-white text-black'
                     : 'bg-transparent text-white hover:bg-[#5a5a5a]'
                   }`}
@@ -1101,14 +1183,15 @@ export default function App() {
             ))}
             <Link
               to={`${langPrefix}/partner`}
-              className={`ml-auto h-10 md:h-12 px-3 text-sm md:text-base rounded-sm font-medium transition-colors whitespace-nowrap shrink-0 flex items-center justify-center text-center ${localizedPath === '/partner'
+              className={`min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:ml-auto md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center ${localizedPath === '/partner'
                   ? 'bg-white text-black'
                   : 'bg-transparent text-white hover:bg-[#5a5a5a]'
                 }`}
             >
               {t.nav.partner}
             </Link>
-            <button onClick={() => setShowShopPopup(true)} className="h-10 md:h-12 px-3 text-sm md:text-base rounded-sm font-medium transition-colors whitespace-nowrap shrink-0 flex items-center justify-center text-center bg-[#3b82f6] text-white hover:bg-[#2563eb]">{t.nav.shop}</button>
+            <button onClick={() => setShowShopPopup(true)} className="min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center bg-[#3b82f6] text-white hover:bg-[#2563eb]">{t.nav.shop}</button>
+            </nav>
           </div>
 
           {showShopPopup && (

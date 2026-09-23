@@ -1,6 +1,7 @@
 export const translations = {
   en: {
     nav: {
+      menu: "Menu",
       home: "Home",
       updates: "Updates",
       modifications: "Modifications",
@@ -136,6 +137,7 @@ export const translations = {
   },
   th: {
     nav: {
+      menu: "เมนู",
       home: "หน้าแรก",
       updates: "อัปเดต",
       modifications: "การปรับแต่ง",

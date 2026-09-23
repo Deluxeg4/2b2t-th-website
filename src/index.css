@@ -90,6 +90,7 @@
   .status-header { height: 66px; }
   .status-brand img { width: 122px; }
   .status-language-toggle { min-width: 68px; height: 36px; }
+  .gameplay-screenshot { aspect-ratio: 1920 / 1057; object-fit: contain; }
   .status-main { padding-top: 31px; }
   .status-title-row { align-items: flex-start; flex-direction: column; gap: 10px; margin-bottom: 20px; }
   .status-main h1 { font-size: 29px; }
