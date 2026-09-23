@@ -1,0 +1,17 @@
+[Unit]
+Description=2b2t TH Website (Docker Compose)
+Wants=network-online.target
+Requires=docker.service wg-quick@wg0.service
+After=network-online.target docker.service wg-quick@wg0.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/2b2t-th-website
+ExecStart=/usr/bin/docker compose up --build --remove-orphans --abort-on-container-exit
+ExecStop=/usr/bin/docker compose down --timeout 30
+Restart=always
+RestartSec=5
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

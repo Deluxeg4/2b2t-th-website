@@ -19,9 +19,21 @@ The output is written to `dist/`.
 
 ## Deploy with Docker
 
+The Compose file is configured for the production WireGuard backend: it publishes the static site only on `10.10.0.2:80`. The VPS Nginx should terminate HTTPS and proxy to `http://10.10.0.2:80` over WireGuard.
+
 ```bash
 docker compose up -d --build
 ```
+
+To start it automatically after `wg0` and Docker are ready, install the systemd unit on the web machine (`10.10.0.2`), not on the VPS:
+
+```bash
+sudo install -m 0644 2b2t-th-website.service /etc/systemd/system/2b2t-th-website.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now 2b2t-th-website.service
+```
+
+Stop it with `sudo systemctl stop 2b2t-th-website.service`. The unit file and Compose project use `/root/2b2t-th-website`; update both paths if the workspace is installed elsewhere.
 
 ## Deploy without Docker
 
