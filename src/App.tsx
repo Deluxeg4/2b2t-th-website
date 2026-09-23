@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, CheckCircle2, Server, Globe2, Bell, Activity } from 'lucide-react';
+import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, CheckCircle2, Bell, Activity } from 'lucide-react';
 import { translations } from './translations';
 import logoImage from './assets/server-logo.png?url';
 
@@ -452,8 +452,6 @@ function About({ lang }: { lang: 'en' | 'th' }) {
 function Partner({ lang }: { lang: 'en' | 'th' }) {
   const [showDiscordPopup, setShowDiscordPopup] = useState(false);
   const [showMinecraftWebsitePopup, setShowMinecraftWebsitePopup] = useState(false);
-  const [showCadsmcWebsitePopup, setShowCadsmcWebsitePopup] = useState(false);
-  const [showCadsmcDiscordPopup, setShowCadsmcDiscordPopup] = useState(false);
   const isThai = lang === 'th';
   const minecraftThMessageTh = `ตอนนี้ 2B2T Thailand ได้เข้าร่วมเป็น Partner กับ MINECRAFT TH แล้ว!
 
@@ -496,37 +494,13 @@ https://discord.gg/mcth
 
 Be part of the growing Thai Minecraft community!`;
   const minecraftThMessage = isThai ? minecraftThMessageTh : minecraftThMessageEn;
-  const cadsmcMessageTh = `CADSMC เป็น Partner ของ 2B2T Thailand
-
-CADS Studio ให้บริการด้าน Minecraft Server ครบวงจร ตั้งแต่ Setup เซิร์ฟเวอร์ เขียน Plugin ทำเว็บไซต์ เชื่อมต่อ DDNS ตั้งค่า Firewall, Docker และดูแลระบบหลังบ้านสำหรับเซิร์ฟเวอร์ที่ต้องใช้งานจริง
-
-ทีมมีประสบการณ์ในวงการ Minecraft มากกว่า 7 ปี ครอบคลุมงาน Server Infrastructure, Proxy Network, Java Plugin, Web, Linux และการปรับ Performance ให้เหมาะกับแนวเซิร์ฟเวอร์ เช่น SMP, Survival, Anarchy, DonutSMP หรือระบบ custom
-
-สามารถติดต่อเพื่อเริ่มคุยโปรเจกต์ ขอคำปรึกษา หรือดูรายละเอียดบริการเพิ่มเติมได้ที่:
-https://dev.2b2t-th.org/
-
-Discord:
-https://discord.com/invite/xtVgj52nN6`;
-  const cadsmcMessageEn = `CADSMC is a partner of 2B2T Thailand.
-
-CADS Studio provides end-to-end Minecraft server services, including server setup, custom plugins, websites, DDNS integration, firewall configuration, Docker setup, and backend systems for production Minecraft servers.
-
-The team has more than 7 years of Minecraft server experience, covering server infrastructure, proxy networks, Java plugins, web development, Linux systems, and performance tuning for SMP, Survival, Anarchy, DonutSMP, and custom server projects.
-
-You can contact CADS Studio, discuss a project, request advice, or view more service details at:
-https://dev.2b2t-th.org/
-
-Discord:
-https://discord.com/invite/xtVgj52nN6`;
-  const cadsmcMessage = isThai ? cadsmcMessageTh : cadsmcMessageEn;
-
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
       <div className="flex flex-col gap-2 border-b border-[#555] pb-5">
         <span className="text-sm font-bold uppercase tracking-wide text-[#f5c542]">Partner</span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-wide">Server Partners</h2>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-wide">Server Partner</h2>
         <p className="text-gray-400 text-sm">
-          {isThai ? 'รายชื่อพาร์ทเนอร์และประกาศความร่วมมือของ 2B2T Thailand' : 'Partners and collaboration announcements for 2B2T Thailand'}
+          {isThai ? 'พาร์ทเนอร์และประกาศความร่วมมือของ 2B2T Thailand' : 'Partner and collaboration announcements for 2B2T Thailand'}
         </p>
       </div>
 
@@ -561,35 +535,6 @@ https://discord.com/invite/xtVgj52nN6`;
           </div>
         </div>
 
-        <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden">
-          <div className="p-5 md:p-6 border-b border-[#555] bg-[#2f2f2f]">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-[#f5c542]">Partner</span>
-              <h3 className="text-2xl font-bold text-white">CADSMC</h3>
-              <p className="text-gray-400 text-sm">{isThai ? 'พาร์ทเนอร์ของ 2B2T Thailand' : 'Partner of 2B2T Thailand'}</p>
-            </div>
-          </div>
-          <div className="p-5 md:p-6 text-gray-300 text-[17px] leading-relaxed whitespace-pre-wrap">
-            <LinkifiedMessage text={cadsmcMessage} />
-          </div>
-          <div className="p-5 md:p-6 pt-0 flex flex-col sm:flex-row gap-3">
-            <button
-              type="button"
-              onClick={() => setShowCadsmcWebsitePopup(true)}
-              className="h-11 px-4 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
-            >
-              {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowCadsmcDiscordPopup(true)}
-              className="h-11 px-4 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center gap-2"
-            >
-              <MessageSquare size={18} />
-              Discord
-            </button>
-          </div>
-        </div>
       </div>
 
       {showMinecraftWebsitePopup && (
@@ -686,99 +631,6 @@ https://discord.com/invite/xtVgj52nN6`;
         </div>
       )}
 
-      {showCadsmcWebsitePopup && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="cadsmc-website-popup-title"
-          onClick={() => setShowCadsmcWebsitePopup(false)}
-        >
-          <div
-            className="w-full max-w-md bg-[#2f3136] border border-white/30 rounded-sm shadow-2xl p-6 text-white text-left"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-white text-black p-2 rounded-sm">
-                <Globe size={22} />
-              </div>
-              <div>
-                <h2 id="cadsmc-website-popup-title" className="text-2xl font-bold tracking-wide">CADS Studio Website</h2>
-                <p className="text-gray-400 text-sm">{isThai ? 'เว็บไซต์บริการ Minecraft Server' : 'Minecraft server services website'}</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mt-5 leading-relaxed">
-              {isThai
-                ? 'เปิดเว็บไซต์ CADS Studio เพื่อดูรายละเอียดบริการ ติดต่อทีมงาน หรือเริ่มคุยโปรเจกต์ Minecraft Server'
-                : 'Open the CADS Studio website to view service details, contact the team, or start a Minecraft server project.'}
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a
-                href="https://dev.2b2t-th.org/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-11 flex-1 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
-              >
-                {isThai ? 'เปิดเว็บไซต์' : 'Open Website'}
-              </a>
-              <button
-                type="button"
-                onClick={() => setShowCadsmcWebsitePopup(false)}
-                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
-              >
-                {isThai ? 'ปิด' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showCadsmcDiscordPopup && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="cadsmc-discord-popup-title"
-          onClick={() => setShowCadsmcDiscordPopup(false)}
-        >
-          <div
-            className="w-full max-w-md bg-[#2f3136] border border-[#5865F2]/60 rounded-sm shadow-2xl p-6 text-white text-left"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-[#5865F2] p-2 rounded-sm">
-                <MessageSquare size={22} />
-              </div>
-              <div>
-                <h2 id="cadsmc-discord-popup-title" className="text-2xl font-bold tracking-wide">CADS Studio Discord</h2>
-                <p className="text-gray-400 text-sm">{isThai ? 'ติดต่อทีม CADS Studio' : 'Contact CADS Studio'}</p>
-              </div>
-            </div>
-            <p className="text-gray-300 mt-5 leading-relaxed">
-              {isThai
-                ? 'เข้าร่วม Discord ของ CADS Studio เพื่อสอบถามบริการ ขอคำปรึกษา หรือเริ่มคุยโปรเจกต์ Minecraft Server'
-                : 'Join the CADS Studio Discord to ask about services, request advice, or start a Minecraft server project.'}
-            </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a
-                href="https://discord.com/invite/xtVgj52nN6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-11 flex-1 rounded-sm bg-[#5865F2] text-white font-bold hover:bg-[#4752c4] transition-colors flex items-center justify-center"
-              >
-                {isThai ? 'เปิด Discord' : 'Open Discord'}
-              </a>
-              <button
-                type="button"
-                onClick={() => setShowCadsmcDiscordPopup(false)}
-                className="h-11 flex-1 rounded-sm bg-[#454545] text-white font-bold hover:bg-[#5a5a5a] transition-colors"
-              >
-                {isThai ? 'ปิด' : 'Close'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -954,26 +806,20 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
   );
 }
 type ServiceStatus = {
-  name: string;
-  id: 'minecraft' | 'queue' | 'website' | 'shop';
+  id: 'minecraft' | 'queue' | 'website';
 };
 
 type LiveStatus = {
   checkedAt: string;
   hasHistory: boolean;
-  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; players?: number | null; history: { ts: string; up: boolean }[] }>;
+  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; latencyMs?: number | null; players?: number | null; derived?: boolean; history: { ts: string; up: boolean }[] }>;
   metrics: { ts: string; players: number }[];
 };
 
-const statusServices: { group: string; icon: ReactNode; services: ServiceStatus[] }[] = [
-  { group: 'Minecraft', icon: <Server size={20} strokeWidth={1.8} />, services: [
-    { name: 'Minecraft Server', id: 'minecraft' },
-    { name: 'Queue', id: 'queue' },
-  ] },
-  { group: 'เว็บไซต์', icon: <Globe2 size={20} strokeWidth={1.8} />, services: [
-    { name: 'เว็บไซต์', id: 'website' },
-    { name: 'ร้านค้า', id: 'shop' },
-  ] },
+const statusServices: ServiceStatus[] = [
+  { id: 'minecraft' },
+  { id: 'queue' },
+  { id: 'website' },
 ];
 
 function UptimeBars({ live, history }: { live: boolean | null; history: { ts: string; up: boolean }[] }) {
@@ -988,39 +834,131 @@ function MetricsChart({ values, range, isThai }: { values: number[]; range: 'mon
   return <div className="metrics-chart" aria-label="Live player metrics chart"><div className="chart-scale"><span>200</span><span>150</span><span>100</span><span>50</span><span>0</span></div>{visibleValues.length > 1 ? <svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img">{[10, 35, 60, 85, 108].map((y) => <line key={y} x1="0" y1={y} x2="900" y2={y} className="chart-grid" />)}<polyline points={points} className="chart-line chart-line-primary" /></svg> : <div className="chart-no-data">{isThai ? 'กำลังสะสมข้อมูลจริง…' : 'Collecting live data…'}</div>}<div className="chart-labels"><span>{range === 'day' ? 'ตอนนี้' : range === 'week' ? '7 วันล่าสุด' : 'เริ่มเก็บข้อมูล'}</span><span>{visibleValues.length > 1 ? `${visibleValues.length} จุดข้อมูล` : ''}</span></div></div>;
 }
 
-function StatusPage({ lang }: { lang: 'en' | 'th' }) {
+async function fetchPublicMinecraftStatus() {
+  const queueCount = (data: any) => {
+    for (const player of data.players?.list || []) {
+      const name = typeof player === 'string' ? player : player.name_clean || player.name_raw || player.name || '';
+      const match = name.replace(/§[0-9a-fk-or]/gi, '').match(/^Queue:\s*(\d+)$/i);
+      if (match) return Number(match[1]);
+    }
+    return null;
+  };
+  const providers = await Promise.allSettled([
+    (async () => {
+      const response = await fetch('https://api.mcstatus.io/v2/status/java/2b2t-th.org', {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!response.ok) throw new Error('mcstatus.io unavailable');
+      const data = await response.json();
+      if (typeof data.online !== 'boolean') throw new Error('mcstatus.io returned no status');
+      return { up: data.online, players: data.online ? Number(data.players?.online || 0) : 0, queuePlayers: data.online ? queueCount(data) : null };
+    })(),
+    (async () => {
+      const response = await fetch('https://api.mcsrvstat.us/3/2b2t-th.org', {
+        cache: 'no-store',
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!response.ok) throw new Error('mcsrvstat.us unavailable');
+      const data = await response.json();
+      if (typeof data.online !== 'boolean') throw new Error('mcsrvstat.us returned no status');
+      return { up: data.online, players: data.online ? Number(data.players?.online || 0) : 0, queuePlayers: data.online ? queueCount(data) : null };
+    })(),
+  ]);
+  const checks = providers
+    .filter((result): result is PromiseFulfilledResult<{ up: boolean; players: number; queuePlayers: number | null }> => result.status === 'fulfilled')
+    .map((result) => result.value);
+  const result = checks.find((check) => check.up) || checks[0];
+  return result || { up: null, players: null, queuePlayers: null };
+}
+
+function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLanguage: () => void }) {
   const [range, setRange] = useState<'month' | 'week' | 'day'>('month');
   const [liveStatus, setLiveStatus] = useState<LiveStatus | null>(null);
+  const [lastCheckedAt, setLastCheckedAt] = useState<Date | null>(null);
+  const [minecraftFallback, setMinecraftFallback] = useState<{ up: boolean | null; players: number | null; queuePlayers: number | null } | null>(null);
   const isThai = lang === 'th';
   useEffect(() => {
     let mounted = true;
     const check = async () => {
       try {
-        const response = await fetch('/api/status', { cache: 'no-store' });
+        const response = await fetch('https://www.2b2t-th.org/api/status', { cache: 'no-store' });
         if (!response.ok) throw new Error('Status API unavailable');
+        if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Status API returned non-JSON data');
         const data: LiveStatus = await response.json();
         if (!mounted) return;
         setLiveStatus(data);
+        setLastCheckedAt(new Date());
+        if (typeof data.services?.minecraft?.latencyMs !== 'number') {
+          setMinecraftFallback(await fetchPublicMinecraftStatus());
+        } else {
+          setMinecraftFallback(null);
+        }
       } catch {
-        if (mounted) setLiveStatus(null);
+        if (mounted) {
+          setLiveStatus(null);
+          setMinecraftFallback(await fetchPublicMinecraftStatus());
+        }
       }
     };
     check();
-    const timer = window.setInterval(check, 60000);
+    const timer = window.setInterval(check, 30000);
     return () => { mounted = false; window.clearInterval(timer); };
   }, []);
-  const serverOnline = liveStatus?.services.minecraft?.up ?? null;
-  const overallOnline = liveStatus && (Object.values(liveStatus.services) as LiveStatus['services'][string][]).some((service) => service.configured && service.up === false) === false;
-  const statusText = !liveStatus ? (isThai ? 'กำลังเชื่อมต่อ Cloudflare…' : 'Connecting to Cloudflare…') : overallOnline ? (isThai ? 'ระบบทั้งหมดทำงานปกติ' : 'All systems operational') : (isThai ? 'พบปัญหาบางบริการ' : 'Some systems are experiencing issues');
-  const serviceStatus = (id: ServiceStatus['id']) => liveStatus?.services[id]?.configured === false ? null : liveStatus?.services[id]?.up ?? null;
-  const serviceLabel = (id: ServiceStatus['id']) => liveStatus?.services[id]?.configured === false ? (isThai ? 'ยังไม่ได้ตั้งค่า' : 'Not configured') : serviceStatus(id) === null ? (isThai ? 'กำลังตรวจสอบ' : 'Checking') : serviceStatus(id) ? (isThai ? 'ทำงานปกติ' : 'Operational') : (isThai ? 'ออฟไลน์' : 'Offline');
+  const minecraftMonitorFailed = Boolean(liveStatus && typeof liveStatus.services.minecraft?.latencyMs !== 'number');
+  const serviceStatus = (id: ServiceStatus['id']) => {
+    const service = liveStatus?.services[id];
+    if (service?.configured === false) return null;
+    if (minecraftMonitorFailed && id === 'minecraft') return minecraftFallback?.up ?? null;
+    if (minecraftMonitorFailed && id === 'queue' && service?.derived) return minecraftFallback?.up ?? null;
+    return service?.up ?? null;
+  };
+  const serverOnline = serviceStatus('minecraft');
+  const configuredServices = Object.entries(liveStatus?.services || {}).filter(([, service]) => service.configured);
+  const hasOfflineService = configuredServices.some(([id, service]) => {
+    const effectiveStatus = id === 'minecraft' || (id === 'queue' && service.derived) ? serverOnline : service.up;
+    return effectiveStatus === false;
+  });
+  const hasUnknownService = configuredServices.some(([id, service]) => {
+    const effectiveStatus = id === 'minecraft' || (id === 'queue' && service.derived) ? serverOnline : service.up;
+    return effectiveStatus === null;
+  });
+  const statusText = !liveStatus
+    ? minecraftFallback?.up === true
+      ? (isThai ? 'Minecraft ทำงานปกติ แต่ตรวจสอบบริการอื่นไม่ได้' : 'Minecraft is online; other services could not be checked')
+      : (isThai ? 'กำลังตรวจสอบสถานะระบบ…' : 'Checking system status…')
+    : hasOfflineService
+      ? (isThai ? 'พบปัญหาบางบริการ' : 'Some systems are experiencing issues')
+      : hasUnknownService
+        ? (isThai ? 'กำลังตรวจสอบสถานะบางบริการ…' : 'Checking some services…')
+        : (isThai ? 'ระบบทั้งหมดทำงานปกติ' : 'All systems operational');
+  const serviceLabel = (id: ServiceStatus['id']) => liveStatus?.services[id]?.configured === false ? (isThai ? 'ยังไม่ได้ตั้งค่า' : 'Not configured') : serviceStatus(id) === null ? (isThai ? 'กำลังตรวจสอบ' : 'Checking') : serviceStatus(id) ? (isThai ? 'ปกติ' : 'Operational') : (isThai ? 'ออฟไลน์' : 'Offline');
+  const serviceName = (id: ServiceStatus['id']) => id === 'minecraft' ? 'Minecraft Server' : id === 'queue' ? 'Queue' : isThai ? 'เว็บไซต์' : 'Website';
+  const overallIcon = hasOfflineService ? <Activity size={22} /> : <CheckCircle2 size={22} />;
+  const formattedCheckedAt = lastCheckedAt?.toLocaleTimeString(isThai ? 'th-TH' : 'en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   return <div className="status-page">
-    <header className="status-header"><div className="status-container status-header-inner"><Link to={`/${lang}`} className="status-brand"><img src={logoImage} alt="2b2t-th" /></Link><nav className="status-nav" aria-label="Status navigation"><Link to={`/${lang}`}>{isThai ? 'หน้าหลัก' : 'Home'}</Link><Link to={`/${lang}/updates`}>{isThai ? 'อัปเดต' : 'Updates'}</Link><Link className="active" to={`/${lang}/status`}>{isThai ? 'สถานะระบบ' : 'Status'}</Link></nav></div></header>
-    <main className="status-container status-main"><h1>{isThai ? 'สถานะระบบ' : 'System status'}</h1><div className={`status-overall ${serverOnline === false ? 'status-overall-down' : ''}`}><CheckCircle2 size={27} /><span>{statusText}</span></div>
-      {statusServices.map((section) => <section key={section.group} className="status-group"><h2>{section.icon}{section.group}</h2><div className="status-table-head"><span>{isThai ? 'บริการ' : 'Service'}</span><span>{isThai ? 'สถานะ' : 'Status'}</span><span>{isThai ? 'ข้อมูลสด' : 'Live data'}</span><span>{isThai ? 'ประวัติการตรวจสอบล่าสุด' : 'Recent checks'}</span></div>{section.services.map((service) => { const live = serviceStatus(service.id); const item = liveStatus?.services[service.id]; return <div className="status-row" key={service.name}><strong>{service.name}</strong><span className={`status-operational ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{service.id === 'minecraft' && item?.players != null ? `${item.players} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page loaded') : item?.uptime != null ? `${item.uptime}%` : '—'}</span><UptimeBars live={live} history={item?.history || []} /></div>; })}</section>)}
-      <section className="status-panel metrics-panel"><div className="panel-title"><h2>System metrics</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'ผู้เล่นออนไลน์' : 'players online'}`}</span></div><div className="range-tabs" role="tablist">{(['month', 'week', 'day'] as const).map((item) => <button key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? 'เดือน' : 'Month') : item === 'week' ? (isThai ? 'สัปดาห์' : 'Week') : (isThai ? 'วัน' : 'Day')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics.map((metric) => metric.players) || []} range={range} isThai={isThai} /></section>
-      <section className="status-panel notices-panel"><h2>Recent notices</h2><div className="notice-empty"><Bell size={24} /><p>{isThai ? 'ไม่มีประกาศในช่วง 7 วันที่ผ่านมา' : 'No notices reported for the past 7 days'}</p></div></section>
-    </main><footer className="status-container status-footer"><span>© 2026 2b2t-th Thailand Community</span><span className="footer-dot">•</span><span>{liveStatus ? `${isThai ? 'ตรวจล่าสุด' : 'Last checked'} ${new Date(liveStatus.checkedAt).toLocaleTimeString(isThai ? 'th-TH' : 'en-US')}` : (isThai ? 'กำลังตรวจสอบ…' : 'Checking…')}</span><a href="https://2b2t-th.org" target="_blank" rel="noreferrer">2b2t-th.org</a></footer>
+    <header className="status-header"><div className="status-container status-header-inner"><div className="status-brand"><img src={logoImage} alt="2b2t-th" /></div><button type="button" className="status-language-toggle" onClick={onToggleLanguage} aria-label={isThai ? 'Switch language to English' : 'เปลี่ยนภาษาเป็นภาษาไทย'}><Globe size={16} />{isThai ? 'EN' : 'TH'}</button></div></header>
+    <main className="status-container status-main">
+      <div className="status-title-row"><h1>{isThai ? 'สถานะระบบ' : 'System status'}</h1><div className="status-last-checked"><span className="status-live-dot" /><span>{lastCheckedAt ? `${isThai ? 'ตรวจล่าสุด' : 'Last checked'} ${formattedCheckedAt}` : (isThai ? 'กำลังตรวจสอบ…' : 'Checking…')}</span></div></div>
+      <div className={`status-overall ${serverOnline === false ? 'status-overall-down' : ''}`} aria-live="polite">{overallIcon}<span>{statusText}</span></div>
+      <section className="status-group" aria-label={isThai ? 'สถานะบริการ' : 'Service status'}>
+        <div className="status-table-head"><span>{isThai ? 'บริการ' : 'Service'}</span><span>{isThai ? 'สถานะ' : 'Status'}</span><span>{isThai ? 'ข้อมูลสด' : 'Live data'}</span><span>{isThai ? 'ประวัติการทำงาน' : 'Recent uptime'}</span></div>
+        {statusServices.map((service) => {
+          const live = serviceStatus(service.id);
+          const item = liveStatus?.services[service.id];
+          const monitorUnavailable = minecraftMonitorFailed && (service.id === 'minecraft' || (service.id === 'queue' && item?.derived));
+          const playerCount = service.id === 'minecraft' ? minecraftFallback?.players ?? item?.players : null;
+          const queueCount = service.id === 'queue' ? minecraftFallback?.queuePlayers ?? item?.players : null;
+          const uptime = monitorUnavailable ? null : item?.uptime;
+          const history = monitorUnavailable ? [] : item?.history || [];
+          const detail = service.id === 'minecraft' && playerCount != null ? `${playerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'queue' && queueCount != null ? `${queueCount} ${isThai ? 'คนในคิว' : 'queued'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page available') : uptime != null ? `${uptime}%` : '—';
+          return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars live={live} history={history} /></div>;
+        })}
+      </section>
+      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{isThai ? 'จำนวนผู้เล่นในเซิร์ฟเวอร์' : 'Players online'}</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'คน' : 'players'}`}</span></div><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['day', 'week', 'month'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? '30 วัน' : '30 days') : item === 'week' ? (isThai ? '7 วัน' : '7 days') : (isThai ? '24 ชั่วโมง' : '24 hours')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics.map((metric) => metric.players) || []} range={range} isThai={isThai} /></section>
+      <section className="status-panel notices-panel"><h2>{isThai ? 'ประกาศล่าสุด' : 'Recent notices'}</h2><div className="notice-empty"><Bell size={24} /><p>{isThai ? 'ไม่มีประกาศในช่วง 7 วันที่ผ่านมา' : 'No notices reported for the past 7 days'}</p></div></section>
+    </main>
+    <footer className="status-container status-footer"><span>© 2026 2b2t-th</span></footer>
   </div>;
 }
 
@@ -1038,6 +976,7 @@ export default function App() {
   const localizedPath = pathLang ? `/${pathSegments.slice(1).join('/')}` : location.pathname;
   const langPrefix = `/${lang}`;
   const isThai = lang === 'th';
+  const statusLabel = isThai ? 'สถานะระบบ' : 'Status';
 
   useEffect(() => {
     const fetchServerStatus = async () => {
@@ -1104,14 +1043,13 @@ export default function App() {
     { name: translations[lang].nav.commands, path: `${langPrefix}/commands`, matchPath: '/commands' },
     { name: translations[lang].nav.connectionGuide, path: `${langPrefix}/connection-guide`, matchPath: '/connection-guide' },
     { name: translations[lang].nav.serverStability, path: `${langPrefix}/server-stability`, matchPath: '/server-stability' },
-    { name: translations[lang].nav.about, path: `${langPrefix}/about`, matchPath: '/about' },
-    { name: isThai ? 'สถานะระบบ' : 'Status', path: `${langPrefix}/status`, matchPath: '/status' }
+    { name: translations[lang].nav.about, path: `${langPrefix}/about`, matchPath: '/about' }
   ];
 
   const t = translations[lang];
 
   if (localizedPath === '/status') {
-    return <StatusPage lang={lang} />;
+    return <StatusPage lang={lang} onToggleLanguage={handleLanguageToggle} />;
   }
 
   return (
@@ -1125,7 +1063,20 @@ export default function App() {
             <img src={logoImage} alt="Server Logo" draggable={false} className="max-w-full h-auto object-contain max-h-32" />
           </div>
 
-          <div className="w-full flex justify-end">
+          <div className="w-full flex items-center justify-end gap-2">
+            <a
+              href={`${langPrefix}/status`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={statusLabel}
+              className={`px-4 py-2 text-sm rounded-sm font-bold transition-colors whitespace-nowrap border flex items-center gap-2 shadow-lg ${localizedPath === '/status'
+                  ? 'bg-white text-black border-white'
+                  : 'bg-[#454545] text-white hover:bg-[#5a5a5a] border-[#555]'
+                }`}
+            >
+              <Activity size={16} />
+              {statusLabel}
+            </a>
             <button
               onClick={handleLanguageToggle}
               className="px-4 py-2 text-sm rounded-sm font-bold transition-colors whitespace-nowrap bg-[#454545] text-white hover:bg-[#5a5a5a] border border-[#555] flex items-center gap-2 shadow-lg"
@@ -1221,6 +1172,10 @@ export default function App() {
             <Link to={`${langPrefix}/contact`} className="text-gray-400 hover:text-white transition-colors">
               Contact
             </Link>
+            <span className="text-gray-600">|</span>
+            <a href={`${langPrefix}/status`} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+              {statusLabel}
+            </a>
           </div>
         </div>
       </div>

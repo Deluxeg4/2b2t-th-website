@@ -4,3 +4,4 @@ services:
       context: .
     ports:
       - "10.10.0.2:80:80"
+    restart: always

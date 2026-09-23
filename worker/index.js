@@ -26,28 +26,85 @@ const saveHistory = async (env, id, sample) => {
   await env.STATUS_KV.put(`history:${id}`, JSON.stringify(history.slice(-25920)));
 };
 
+const checkMinecraftProvider = async (url, source, parse) => {
+  const response = await fetch(url, { signal: AbortSignal.timeout(6000) });
+  if (!response.ok) throw new Error(`${source} returned ${response.status}`);
+  const data = await response.json();
+  const status = parse(data);
+  if (typeof status.up !== 'boolean') throw new Error(`${source} returned no status`);
+  return { ...status, source };
+};
+
+const readQueueCount = (data) => {
+  const sample = data.players?.list || [];
+  for (const player of sample) {
+    const name = typeof player === 'string' ? player : player.name_clean || player.name_raw || player.name || '';
+    const match = name.replace(/§[0-9a-fk-or]/gi, '').match(/^Queue:\s*(\d+)$/i);
+    if (match) return Number(match[1]);
+  }
+  return null;
+};
+
+const checkMinecraft = async () => {
+  const started = Date.now();
+  const results = await Promise.allSettled([
+    checkMinecraftProvider(
+      'https://api.mcstatus.io/v2/status/java/2b2t-th.org',
+      'mcstatus.io',
+      (data) => ({
+        up: data.online,
+        players: data.online ? Number(data.players?.online || 0) : 0,
+        queuePlayers: data.online ? readQueueCount(data) : null,
+        version: data.version?.name_clean || null,
+      }),
+    ),
+    checkMinecraftProvider(
+      'https://api.mcsrvstat.us/3/2b2t-th.org',
+      'mcsrvstat.us',
+      (data) => ({
+        up: data.online,
+        players: data.online ? Number(data.players?.online || 0) : 0,
+        queuePlayers: data.online ? readQueueCount(data) : null,
+        version: data.version || null,
+      }),
+    ),
+  ]);
+  const checks = results.filter((result) => result.status === 'fulfilled').map((result) => result.value);
+  if (!checks.length) {
+    return { configured: true, up: null, latencyMs: null, players: null, source: null };
+  }
+
+  const selected = checks.find((check) => check.up) || checks[0];
+  return {
+    configured: true,
+    ...selected,
+    latencyMs: Date.now() - started,
+  };
+};
+
 const collectStatus = async (env) => {
-  let minecraft = { configured: true, up: false, latencyMs: null, players: null };
-  try {
-    const started = Date.now();
-    const response = await fetch('https://api.mcsrvstat.us/3/2b2t-th.org', { signal: AbortSignal.timeout(8000) });
-    const data = await response.json();
-    minecraft = { configured: true, up: Boolean(data.online), latencyMs: Date.now() - started, players: data.online ? Number(data.players?.online || 0) : 0, maxPlayers: data.players?.max || null, version: data.version || null };
-  } catch {}
+  const minecraft = await checkMinecraft();
 
   const services = {
     minecraft,
-    queue: env.QUEUE_HEALTH_URL ? await checkUrl(env.QUEUE_HEALTH_URL) : { configured: true, up: minecraft.up, latencyMs: minecraft.latencyMs, derived: true },
+    queue: env.QUEUE_HEALTH_URL ? await checkUrl(env.QUEUE_HEALTH_URL) : { configured: true, up: minecraft.up, players: minecraft.queuePlayers, latencyMs: minecraft.latencyMs, source: minecraft.source, derived: true },
     website: await checkUrl(env.WEBSITE_HEALTH_URL || 'https://2b2t-th.org/'),
     shop: await checkUrl(env.SHOP_HEALTH_URL),
   };
   const now = new Date().toISOString();
   const result = { checkedAt: now, services: {}, metrics: [], hasHistory: Boolean(env.STATUS_KV) };
   for (const [id, service] of Object.entries(services)) {
-    const history = await readHistory(env, id);
+    const storedHistory = await readHistory(env, id);
+    // Older Minecraft entries were recorded as offline when the provider request threw.
+    // Keep the KV data, but only show samples collected by the reliable multi-provider check.
+    const history = id === 'minecraft' || id === 'queue'
+      ? storedHistory.filter((item) => item.source)
+      : storedHistory;
     const uptime = history.length ? Number(((history.filter((item) => item.up).length / history.length) * 100).toFixed(2)) : null;
     result.services[id] = { ...service, uptime, history: history.slice(-90) };
-    if (env.STATUS_KV && service.up !== null) await saveHistory(env, id, { ts: now, up: service.up });
+    if (env.STATUS_KV && service.up !== null) {
+      await saveHistory(env, id, { ts: now, up: service.up, source: service.source || null });
+    }
   }
   const metrics = await readHistory(env, 'metrics');
   if (minecraft.players !== null) {

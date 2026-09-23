@@ -11,8 +11,8 @@ export const translations = {
       partner: "Partner",
       shop: "Shop",
       comingSoon: "Coming soon",
-      shopComingSoonTitle: "Shop coming soon",
-      shopComingSoonDesc: "The shop is not available yet. Please check back later."
+      shopComingSoonTitle: "Priority Queue coming soon",
+      shopComingSoonDesc: "We plan to open Priority Queue once the server reaches 100 active players, as higher player activity may lead to longer queue and connection delays."
     },
     home: {
       newsUpdates: "News & Updates",
@@ -146,8 +146,8 @@ export const translations = {
       partner: "พาร์ทเนอร์",
       shop: "ร้านค้า",
       comingSoon: "เร็วๆ นี้",
-      shopComingSoonTitle: "ร้านค้ายังไม่เปิดให้บริการ",
-      shopComingSoonDesc: "ระบบร้านค้ายังไม่พร้อมใช้งานในตอนนี้ กรุณากลับมาตรวจสอบใหม่ภายหลัง"
+      shopComingSoonTitle: "Priority Queue ยังไม่เปิดให้บริการ",
+      shopComingSoonDesc: "เราจะเปิดให้บริการ Priority Queue เมื่อมีผู้เล่น Active ครบ 100 คน เพราะช่วงที่มีผู้เล่นจำนวนมากอาจทำให้คิวรอและการเข้าเซิร์ฟเวอร์ล่าช้า"
     },
     home: {
       newsUpdates: "ข่าวสารและอัปเดต",
