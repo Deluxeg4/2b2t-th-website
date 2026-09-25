@@ -199,11 +199,6 @@ export default {
     const url = new URL(request.url);
     const host = url.hostname.toLowerCase();
 
-    if (host === 'status.2b2t-th.org' && url.pathname === '/') {
-      url.pathname = '/th/status';
-      return Response.redirect(url.toString(), 302);
-    }
-
     const shouldRedirectToRoot =
       host !== '2b2t-th.org' && host !== 'www.2b2t-th.org' && host !== 'status.2b2t-th.org' && host.endsWith('.2b2t-th.org');
 
