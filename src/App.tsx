@@ -929,12 +929,14 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isStatusHost = window.location.hostname.toLowerCase() === 'status.2b2t-th.org';
   const pathSegments = location.pathname.split('/').filter(Boolean);
   const pathLang = pathSegments[0] === 'en' || pathSegments[0] === 'th' ? pathSegments[0] : null;
-  const localizedPath = pathLang ? `/${pathSegments.slice(1).join('/')}` : location.pathname;
+  const localizedPath = isStatusHost && location.pathname === '/'
+    ? '/status'
+    : pathLang ? `/${pathSegments.slice(1).join('/')}` : location.pathname;
   const langPrefix = `/${lang}`;
   const isThai = lang === 'th';
-  const isStatusHost = window.location.hostname === 'status.2b2t-th.org';
   const statusLabel = isThai ? 'สถานะระบบ' : 'Status';
 
   useEffect(() => {
@@ -1007,7 +1009,7 @@ export default function App() {
 
   const t = translations[lang];
 
-  if (localizedPath === '/status' || isStatusHost) {
+  if (localizedPath === '/status') {
     return <StatusPage lang={lang} onToggleLanguage={handleLanguageToggle} />;
   }
 
