@@ -821,8 +821,8 @@ const rangeMs: Record<Range, number> = { day: 86400000, week: 7 * 86400000, mont
 
 function UptimeBars({ history, lang }: { history: ServiceHistory[]; lang: 'en' | 'th' }) {
   const isThai = lang === 'th';
-  const bars = history.slice(-90);
-  return <div className="status-bars" aria-label={isThai ? 'ประวัติการทำงาน 90 วัน' : '90 day uptime history'}>{bars.map((item, index) => {
+  const bars = history.slice(-60);
+  return <div className="status-bars" aria-label={isThai ? 'ประวัติการทำงาน 60 วัน' : '60 day uptime history'}>{bars.map((item, index) => {
     const date = new Date(item.timestamp).toLocaleDateString(isThai ? 'th-TH' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' });
     const label = item.status === 'unknown' ? (isThai ? 'ไม่มีข้อมูล' : 'No data') : statusLabel(item.status, lang);
     return <span key={`${item.timestamp}-${index}`} title={`${date}: ${label}`} aria-label={`${date}: ${label}`} className={`status-bar ${item.status}`} />;

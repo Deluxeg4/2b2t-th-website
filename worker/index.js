@@ -5,21 +5,6 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
 
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
 const MAX_SAMPLES = 90 * 24 * 12; // Five-minute samples for 90 days.
-const statusPageShell = `<!doctype html>
-<html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>2b2t-th | สถานะระบบ</title>
-    <style>
-      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-      iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
-    </style>
-  </head>
-  <body>
-    <iframe src="https://2b2t-th.org/th/status" title="2b2t-th system status"></iframe>
-  </body>
-</html>`;
 
 const readHistory = async (env, key) => {
   if (!env.STATUS_KV) return [];
@@ -276,16 +261,6 @@ export default {
       } catch {
         return json({ error: 'Status source unavailable' }, { status: 502, headers: { 'cache-control': 'no-store' } });
       }
-    }
-
-    if (host === 'status.2b2t-th.org') {
-      return new Response(statusPageShell, {
-        headers: {
-          'content-type': 'text/html; charset=utf-8',
-          'cache-control': 'no-store',
-          'x-content-type-options': 'nosniff',
-        },
-      });
     }
 
     return env.ASSETS.fetch(request);
