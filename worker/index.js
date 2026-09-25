@@ -200,7 +200,7 @@ export default {
     const host = url.hostname.toLowerCase();
 
     if (host === 'status.2b2t-th.org' && url.pathname === '/') {
-      url.pathname = '/status';
+      url.pathname = '/th/status';
       return Response.redirect(url.toString(), 302);
     }
 
