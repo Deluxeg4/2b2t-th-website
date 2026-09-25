@@ -188,6 +188,46 @@ const toDashboardPayload = async (env, status) => {
   };
 };
 
+const toLegacyDashboardPayload = async (env, status) => {
+  const serviceById = Object.fromEntries(status.services.map((service) => [service.id, service]));
+  const now = Date.now();
+  const legacyService = async (serviceId, historyId = serviceId, extra = {}) => {
+    const service = serviceById[serviceId];
+    const history = trimSamples(await readHistory(env, historyId), now).slice(-90);
+    const uptime = history.length
+      ? Number(((history.filter((sample) => sample.up === true).length / history.length) * 100).toFixed(2))
+      : null;
+    return {
+      configured: service?.configured !== false,
+      up: service?.up ?? null,
+      uptime,
+      latencyMs: service?.responseTimeMs ?? null,
+      history,
+      ...extra,
+    };
+  };
+  const [minecraft, queue, website, shop] = await Promise.all([
+    legacyService('main-server', 'minecraft', {
+      players: status.playerCount.online,
+      queuePlayers: serviceById.queue?.players ?? null,
+    }),
+    legacyService('queue'),
+    legacyService('website'),
+    legacyService('shop'),
+  ]);
+  const metrics = trimSamples(await readHistory(env, 'metrics'), now)
+    .filter((sample) => typeof sample.players === 'number')
+    .slice(-90)
+    .map((sample) => ({ ts: sample.ts || sample.timestamp, players: sample.players }));
+
+  return {
+    checkedAt: status.checkedAt,
+    hasHistory: Boolean(env.STATUS_KV),
+    services: { minecraft, queue, website, shop },
+    metrics,
+  };
+};
+
 const collectStatus = async (env, persist = false) => {
   const status = await currentStatus(env);
   if (persist) await persistStatus(env, status);
@@ -210,8 +250,14 @@ export default {
     if (url.pathname === '/api/status') {
       try {
         const status = await collectStatus(env);
-        const payload = await toDashboardPayload(env, status);
-        return json(payload, { headers: { 'cache-control': 'no-store', 'access-control-allow-origin': '*' } });
+        const origin = request.headers.get('origin') || request.headers.get('referer') || '';
+        let originHost = '';
+        try { originHost = new URL(origin).hostname.toLowerCase(); } catch {}
+        const isLegacyMainPage = originHost === '2b2t-th.org' || originHost === 'www.2b2t-th.org';
+        const payload = isLegacyMainPage
+          ? await toLegacyDashboardPayload(env, status)
+          : await toDashboardPayload(env, status);
+        return json(payload, { headers: { 'cache-control': 'no-store', 'access-control-allow-origin': '*', vary: 'Origin' } });
       } catch {
         return json({ error: 'Status source unavailable' }, { status: 502, headers: { 'cache-control': 'no-store' } });
       }
