@@ -16,19 +16,7 @@
 	],
 	"routes": [
 		{
-			"pattern": "2b2t-th.org/*",
-			"zone_name": "2b2t-th.org"
-		},
-		{
-			"pattern": "www.2b2t-th.org/*",
-			"zone_name": "2b2t-th.org"
-		},
-		{
 			"pattern": "status.2b2t-th.org/*",
-			"zone_name": "2b2t-th.org"
-		},
-		{
-			"pattern": "*.2b2t-th.org/*",
 			"zone_name": "2b2t-th.org"
 		}
 	],

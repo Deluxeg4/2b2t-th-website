@@ -31,6 +31,15 @@ const queueCountFromPlayers = (players = []) => {
   return null;
 };
 
+const inGameCountFromPlayers = (players = []) => {
+  for (const player of players) {
+    const name = typeof player === 'string' ? player : player.name_clean || player.name_raw || player.name || '';
+    const match = name.replace(/§[0-9a-fk-or]/gi, '').match(/^In-game:\s*(\d+)$/i);
+    if (match) return Number(match[1]);
+  }
+  return null;
+};
+
 const checkMinecraftProvider = async (url, source, parse) => {
   const started = Date.now();
   const response = await fetch(url, { signal: AbortSignal.timeout(7000) });
@@ -45,14 +54,14 @@ const checkMinecraft = async () => {
   const results = await Promise.allSettled([
     checkMinecraftProvider('https://api.mcstatus.io/v2/status/java/2b2t-th.org', 'mcstatus.io', (data) => ({
       up: data.online,
-      players: data.online ? Number(data.players?.online || 0) : 0,
+      players: data.online ? (inGameCountFromPlayers(data.players?.list) ?? Number(data.players?.online || 0)) : 0,
       maxPlayers: data.players?.max == null ? null : Number(data.players.max),
       queuePlayers: data.online ? queueCountFromPlayers(data.players?.list) : null,
       version: data.version?.name_clean || null,
     })),
     checkMinecraftProvider('https://api.mcsrvstat.us/3/2b2t-th.org', 'mcsrvstat.us', (data) => ({
       up: data.online,
-      players: data.online ? Number(data.players?.online || 0) : 0,
+      players: data.online ? (inGameCountFromPlayers(data.players?.list) ?? Number(data.players?.online || 0)) : 0,
       maxPlayers: data.players?.max == null ? null : Number(data.players.max),
       queuePlayers: data.online ? queueCountFromPlayers(data.players?.list) : null,
       version: data.version || null,
@@ -253,7 +262,9 @@ export default {
         const origin = request.headers.get('origin') || request.headers.get('referer') || '';
         let originHost = '';
         try { originHost = new URL(origin).hostname.toLowerCase(); } catch {}
-        const isLegacyMainPage = originHost === '2b2t-th.org' || originHost === 'www.2b2t-th.org';
+        const requestedFormat = url.searchParams.get('format');
+        const isLegacyMainPage = requestedFormat === 'legacy' ||
+          (requestedFormat !== 'dashboard' && (originHost === '2b2t-th.org' || originHost === 'www.2b2t-th.org'));
         const payload = isLegacyMainPage
           ? await toLegacyDashboardPayload(env, status)
           : await toDashboardPayload(env, status);
