@@ -226,7 +226,7 @@ const toLegacyDashboardPayload = async (env, status) => {
   ]);
   const metrics = trimSamples(await readHistory(env, 'metrics'), now)
     .filter((sample) => typeof sample.players === 'number')
-    .slice(-90)
+    .filter((sample) => Date.parse(sample.ts || sample.timestamp) >= now - 30 * 24 * 60 * 60 * 1000)
     .map((sample) => ({ ts: sample.ts || sample.timestamp, players: sample.players }));
 
   return {

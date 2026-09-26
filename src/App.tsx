@@ -825,15 +825,27 @@ function UptimeBars({ live, history }: { live: boolean | null; history: { ts: st
   return <div className="status-bars" aria-label={historyAvailable ? '90 day uptime history' : 'No uptime history configured'}>{bars.map((item, index) => <span key={index} className={`status-bar ${historyAvailable ? (item.up ? 'up' : 'down') : 'unknown'}`} />)}</div>;
 }
 
-function MetricsChart({ values, range, isThai }: { values: number[]; range: 'month' | 'week' | 'day'; isThai: boolean }) {
-  const visibleValues = range === 'month' ? values : values.slice(range === 'week' ? -7 : -1);
-  const maxValue = Math.max(0, ...visibleValues);
+type PlayerMetric = { ts: string; players: number };
+const metricRangeMs = { day: 24 * 60 * 60 * 1000, week: 7 * 24 * 60 * 60 * 1000, month: 30 * 24 * 60 * 60 * 1000 };
+
+function MetricsChart({ values, range, isThai }: { values: PlayerMetric[]; range: 'month' | 'week' | 'day'; isThai: boolean }) {
+  const now = Date.now();
+  const rangeMs = metricRangeMs[range];
+  const cutoff = now - rangeMs;
+  const visibleValues = values
+    .filter((point) => Number.isFinite(Date.parse(point.ts)) && Date.parse(point.ts) >= cutoff && Date.parse(point.ts) <= now)
+    .sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts));
+  const maxValue = Math.max(0, ...visibleValues.map((point) => point.players));
   const step = Math.max(1, Math.ceil(maxValue / 4));
   const axisMax = Math.max(step, Math.ceil(maxValue / step) * step);
   const scaleValues = Array.from({ length: axisMax / step + 1 }, (_, index) => axisMax - index * step);
   const gridY = (index: number) => 10 + (index / (scaleValues.length - 1)) * 98;
-  const points = visibleValues.map((value, index) => `${visibleValues.length === 1 ? 450 : (index / (visibleValues.length - 1)) * 900},${108 - Math.min(value / axisMax, 1) * 98}`).join(' ');
-  return <div className="metrics-chart" aria-label="Live player metrics chart"><div className="chart-scale">{scaleValues.map((value) => <span key={value}>{value}</span>)}</div>{visibleValues.length > 1 ? <svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img">{scaleValues.map((_, index) => <line key={index} x1="0" y1={gridY(index)} x2="900" y2={gridY(index)} className="chart-grid" />)}<polyline points={points} className="chart-line chart-line-primary" /></svg> : <div className="chart-no-data">{isThai ? 'กำลังสะสมข้อมูลจริง…' : 'Collecting live data…'}</div>}<div className="chart-labels"><span>{range === 'day' ? 'ตอนนี้' : range === 'week' ? '7 วันล่าสุด' : 'เริ่มเก็บข้อมูล'}</span><span>{visibleValues.length > 1 ? `${visibleValues.length} จุดข้อมูล` : ''}</span></div></div>;
+  const points = visibleValues.map((point) => {
+    const x = ((Date.parse(point.ts) - cutoff) / rangeMs) * 900;
+    const y = 108 - Math.min(point.players / axisMax, 1) * 98;
+    return `${x},${y}`;
+  }).join(' ');
+  return <div className="metrics-chart" aria-label="Live player metrics chart"><div className="chart-scale">{scaleValues.map((value) => <span key={value}>{value}</span>)}</div>{visibleValues.length > 1 ? <svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img">{scaleValues.map((_, index) => <line key={index} x1="0" y1={gridY(index)} x2="900" y2={gridY(index)} className="chart-grid" />)}<polyline points={points} className="chart-line chart-line-primary" /></svg> : <div className="chart-no-data">{isThai ? 'กำลังสะสมข้อมูลจริง…' : 'Collecting live data…'}</div>}<div className="chart-labels"><span>{range === 'day' ? (isThai ? '24 ชั่วโมงก่อน' : '24 hours ago') : range === 'week' ? (isThai ? '7 วันก่อน' : '7 days ago') : (isThai ? '30 วันก่อน' : '30 days ago')}</span><span>{visibleValues.length > 1 ? `${visibleValues.length} ${isThai ? 'จุดข้อมูล' : 'samples'}` : ''}</span><span>{isThai ? 'ตอนนี้' : 'Now'}</span></div></div>;
 }
 
 async function fetchPublicMinecraftStatus() {
@@ -965,7 +977,7 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
           return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars live={live} history={history} /></div>;
         })}
       </section>
-      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{isThai ? 'จำนวนผู้เล่นในเซิร์ฟเวอร์' : 'Players online'}</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'คน' : 'players'}`}</span></div><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['day', 'week', 'month'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? '30 วัน' : '30 days') : item === 'week' ? (isThai ? '7 วัน' : '7 days') : (isThai ? '24 ชั่วโมง' : '24 hours')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics.map((metric) => metric.players) || []} range={range} isThai={isThai} /></section>
+      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{isThai ? 'จำนวนผู้เล่นในเซิร์ฟเวอร์' : 'Players online'}</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'คน' : 'players'}`}</span></div><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['day', 'week', 'month'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? '30 วัน' : '30 days') : item === 'week' ? (isThai ? '7 วัน' : '7 days') : (isThai ? '24 ชั่วโมง' : '24 hours')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics || []} range={range} isThai={isThai} /></section>
       <section className="status-panel notices-panel"><h2>{isThai ? 'ประกาศล่าสุด' : 'Recent notices'}</h2><div className="notice-empty"><Bell size={24} /><p>{isThai ? 'ไม่มีประกาศในช่วง 7 วันที่ผ่านมา' : 'No notices reported for the past 7 days'}</p></div></section>
     </main>
     <footer className="status-container status-footer"><span>© 2026 2b2t-th</span></footer>
