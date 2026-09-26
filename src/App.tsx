@@ -103,7 +103,7 @@ function GameplayCarousel() {
                 alt={`Gameplay screenshot ${index + 1}`}
                 width={1920}
                 height={1057}
-                loading={Math.abs(index - currentIndex) <= 1 ? 'eager' : 'lazy'}
+                loading={index === currentIndex ? 'eager' : 'lazy'}
                 draggable={false}
                 className="gameplay-screenshot block w-full aspect-video object-cover"
               />
@@ -118,9 +118,9 @@ function GameplayCarousel() {
 function ServerInfoCard({ lang, playerCount, handleCopyIp, copied }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean }) {
   const t = translations[lang].home;
   return (
-    <div className="w-full rounded-sm bg-[#454545] p-6 text-left text-white shadow-lg sm:p-8">
+    <div className="w-full rounded-sm bg-[#454545] p-5 text-left text-white shadow-lg sm:p-8">
       <div className="flex flex-col gap-5">
-        <h2 className="text-center text-3xl font-bold tracking-wide">{t.title}</h2>
+        <h2 className="text-center text-2xl sm:text-3xl font-bold tracking-wide">{t.title}</h2>
         <p className="text-[17px] leading-relaxed text-gray-300">{t.description}</p>
         <div className="mt-1 flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
           <div className="mt-1 flex w-full items-center gap-2 rounded-sm border border-[#555] bg-[#353535] px-4 py-2 sm:mt-0 sm:w-auto">
@@ -158,7 +158,7 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
       {/* Left Side Area */}
       <div className="flex flex-col gap-4 w-full lg:flex-1">
         <GameplayCarousel />
-        <div className="w-full h-full bg-[#454545] rounded-sm shadow-lg p-6 text-white text-left">
+        <div className="w-full h-full bg-[#454545] rounded-sm shadow-lg p-4 sm:p-6 text-white text-left">
           <h3 className="text-xl font-bold tracking-wide mb-4">{t.newsUpdates}</h3>
           <div className="space-y-4">
             {loadingUpdates ? (
@@ -184,18 +184,19 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
         <div className="hidden lg:block">
           <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} />
         </div>
-        <div className="w-full bg-[#454545] rounded-sm shadow-lg p-6 text-white text-left">
+        <div className="w-full bg-[#454545] rounded-sm shadow-lg p-4 sm:p-6 text-white text-left">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-[#5865F2] p-2 rounded-sm">
               <MessageSquare size={20} className="text-white" />
             </div>
             <h3 className="text-xl font-bold tracking-wide">{t.discordCommunity}</h3>
           </div>
-          <div className="w-full min-h-[500px] bg-[#36393f] rounded-sm border border-[#2c2f33] overflow-hidden">
+          <div className="w-full min-h-[420px] sm:min-h-[500px] bg-[#36393f] rounded-sm border border-[#2c2f33] overflow-hidden">
             <iframe
               src="https://canary.discord.com/widget?id=1348603803162640414&theme=dark"
               width="100%"
-              height="500"
+              height="440"
+              className="discord-widget-frame"
               allowTransparency={true}
               frameBorder="0"
               sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
@@ -211,8 +212,8 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
 function Updates({ lang, updates, loadingUpdates }: { lang: 'en' | 'th', updates: any[], loadingUpdates: boolean }) {
   const t = translations[lang].updates;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.logTitle}</p>
       <div className="flex flex-col gap-4 text-gray-300 text-[15px]">
         {loadingUpdates ? (
@@ -239,8 +240,8 @@ function Updates({ lang, updates, loadingUpdates }: { lang: 'en' | 'th', updates
 function Modifications({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].modifications;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.lastEdit}</p>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6">
         <p>
@@ -266,8 +267,8 @@ function Modifications({ lang }: { lang: 'en' | 'th' }) {
 function Commands({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].commands;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.lastEdit}</p>
       <div className="text-gray-300 text-[15px] leading-relaxed flex flex-col gap-6">
         <p className="text-[17px]">{t.desc}</p>
@@ -340,8 +341,8 @@ function Commands({ lang }: { lang: 'en' | 'th' }) {
 function ServerStability({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].serverStability;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6 mt-6">
         <div className="bg-red-500/10 border-l-4 border-red-500 p-6 rounded-r-md">
           <h3 className="text-xl font-bold text-red-500 mb-2 flex items-center gap-2">{t.warning.title}</h3>
@@ -369,8 +370,8 @@ function ServerStability({ lang }: { lang: 'en' | 'th' }) {
 function ConnectionGuide({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].connectionGuide;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.subTitle}</p>
       <div className="flex flex-col gap-8">
         <div>
@@ -419,8 +420,8 @@ function ConnectionGuide({ lang }: { lang: 'en' | 'th' }) {
 function About({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].about;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
-      <h2 className="text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6 mt-6">
         <p>{t.desc1}</p>
         <p>{t.desc2}</p>
@@ -492,10 +493,10 @@ https://discord.gg/mcth
 Be part of the growing Thai Minecraft community!`;
   const minecraftThMessage = isThai ? minecraftThMessageTh : minecraftThMessageEn;
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
       <div className="flex flex-col gap-2 border-b border-[#555] pb-5">
         <span className="text-sm font-bold uppercase tracking-wide text-[#f5c542]">Partner</span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-wide">Server Partner</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">Server Partner</h2>
         <p className="text-gray-400 text-sm">
           {isThai ? 'พาร์ทเนอร์และประกาศความร่วมมือของ 2B2T Thailand' : 'Partner and collaboration announcements for 2B2T Thailand'}
         </p>
@@ -643,10 +644,10 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
   };
 
   return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-8 md:p-12 text-white text-left min-h-[500px]">
+    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
       <div className="border-b border-[#555] pb-5">
         <span className="text-sm font-bold uppercase tracking-wide text-[#f5c542]">Support</span>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-wide mt-2">2b2t-th Support</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide mt-2">2b2t-th Support</h2>
         <p className="text-gray-400 text-sm mt-2">
           {isThai
             ? 'ช่องทางติดต่อทีมงานสำหรับปัญหาเกี่ยวกับเซิร์ฟเวอร์ การเข้าเล่น และการสนับสนุน'
@@ -693,13 +694,13 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
           </div>
           <h3 className="text-xl font-bold text-white">{isThai ? 'ลิงก์สำคัญ' : 'Useful Links'}</h3>
           <div className="flex flex-col gap-3 mt-4">
-            <Link to={`${isThai ? '/th' : '/en'}/connection-guide`} className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
+            <Link to="/connection-guide" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
               {isThai ? 'วิธีเข้าเล่น' : 'Connection Guide'}
             </Link>
-            <Link to={`${isThai ? '/th' : '/en'}/updates`} className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
+            <Link to="/updates" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
               {isThai ? 'อัปเดตล่าสุด' : 'Latest Updates'}
             </Link>
-            <Link to={`${isThai ? '/th' : '/en'}/server-stability`} className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
+            <Link to="/server-stability" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
               {isThai ? 'เสถียรภาพเซิร์ฟเวอร์' : 'Server Stability'}
             </Link>
           </div>
@@ -1000,7 +1001,6 @@ export default function App() {
   const localizedPath = isStatusHost && location.pathname === '/'
     ? '/status'
     : pathLang ? `/${pathSegments.slice(1).join('/')}` : location.pathname;
-  const langPrefix = `/${lang}`;
   const isThai = lang === 'th';
   const statusLabel = isThai ? 'สถานะระบบ' : 'Status';
 
@@ -1044,10 +1044,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (pathLang && pathLang !== lang) {
+    if (pathLang) {
       setLang(pathLang);
     }
-  }, [pathLang, lang]);
+    const canonicalPath = isStatusHost ? '/' : pathLang ? localizedPath : null;
+    if (canonicalPath && location.pathname !== canonicalPath) {
+      navigate({ pathname: canonicalPath, search: location.search, hash: location.hash }, { replace: true });
+    }
+  }, [pathLang, isStatusHost, location.pathname, location.search, location.hash, localizedPath, navigate]);
 
   const handleCopyIp = () => {
     navigator.clipboard.writeText('2b2t-th.org');
@@ -1057,19 +1061,17 @@ export default function App() {
 
   const handleLanguageToggle = () => {
     const nextLang = lang === 'en' ? 'th' : 'en';
-    const nextPath = localizedPath === '/' ? `/${nextLang}` : `/${nextLang}${localizedPath}`;
     setLang(nextLang);
-    navigate(nextPath);
   };
 
   const navItems = [
-    { name: translations[lang].nav.home, path: langPrefix, matchPath: '/' },
-    { name: translations[lang].nav.updates, path: `${langPrefix}/updates`, matchPath: '/updates' },
-    { name: translations[lang].nav.modifications, path: `${langPrefix}/modifications`, matchPath: '/modifications' },
-    { name: translations[lang].nav.commands, path: `${langPrefix}/commands`, matchPath: '/commands' },
-    { name: translations[lang].nav.connectionGuide, path: `${langPrefix}/connection-guide`, matchPath: '/connection-guide' },
-    { name: translations[lang].nav.serverStability, path: `${langPrefix}/server-stability`, matchPath: '/server-stability' },
-    { name: translations[lang].nav.about, path: `${langPrefix}/about`, matchPath: '/about' }
+    { name: translations[lang].nav.home, path: '/', matchPath: '/' },
+    { name: translations[lang].nav.updates, path: '/updates', matchPath: '/updates' },
+    { name: translations[lang].nav.modifications, path: '/modifications', matchPath: '/modifications' },
+    { name: translations[lang].nav.commands, path: '/commands', matchPath: '/commands' },
+    { name: translations[lang].nav.connectionGuide, path: '/connection-guide', matchPath: '/connection-guide' },
+    { name: translations[lang].nav.serverStability, path: '/server-stability', matchPath: '/server-stability' },
+    { name: translations[lang].nav.about, path: '/about', matchPath: '/about' }
   ];
 
   const t = translations[lang];
@@ -1084,9 +1086,9 @@ export default function App() {
       <div className="absolute inset-0 bg-[#252525] opacity-80 z-10"></div>
 
       <div className="relative z-20 w-full h-full overflow-y-auto no-scrollbar">
-        <div className="mx-auto w-full flex flex-col gap-3 max-w-[98vw] xl:max-w-7xl pt-14 pb-16 px-4">
+        <div className="mx-auto w-full flex flex-col gap-3 max-w-[98vw] xl:max-w-7xl pt-7 sm:pt-14 pb-8 sm:pb-16 px-3 sm:px-4">
           <div className="w-full flex justify-center">
-            <img src={logoImage} alt="Server Logo" draggable={false} className="max-w-full h-auto object-contain max-h-32" />
+            <img src={logoImage} alt="Server Logo" draggable={false} className="max-w-full h-auto object-contain max-h-20 sm:max-h-32" />
           </div>
 
           <div className="w-full flex items-center justify-end gap-2">
@@ -1126,7 +1128,7 @@ export default function App() {
               </button>
               <div className="ml-auto flex shrink-0 items-center gap-1">
                 <Link
-                  to={`${langPrefix}/partner`}
+                  to="/partner"
                   className={`flex min-h-10 items-center justify-center whitespace-nowrap rounded-sm px-2.5 text-xs font-medium ${localizedPath === '/partner' ? 'bg-white text-black' : 'text-white hover:bg-[#5a5a5a]'}`}
                 >
                   {t.nav.partner}
@@ -1210,7 +1212,7 @@ export default function App() {
               </Link>
             ))}
             <Link
-              to={`${langPrefix}/partner`}
+              to="/partner"
               className={`min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:ml-auto md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center ${localizedPath === '/partner'
                   ? 'bg-white text-black'
                   : 'bg-transparent text-white hover:bg-[#5a5a5a]'
@@ -1275,12 +1277,12 @@ export default function App() {
             <Route path="/about" element={<About lang={lang} />} />
             <Route path="/partner" element={<Partner lang={lang} />} />
             <Route path="/contact" element={<Contact lang={lang} />} />
-            <Route path="*" element={<Navigate to={langPrefix} replace />} />
+            <Route path="*" element={<Navigate to={pathLang ? localizedPath : '/'} replace />} />
           </Routes>
           <div className="w-full text-center text-gray-500 text-sm mt-4 pb-4 flex items-center justify-center gap-3">
             <span>&copy; 2026 2b2t-th</span>
             <span className="text-gray-600">|</span>
-            <Link to={`${langPrefix}/contact`} className="text-gray-400 hover:text-white transition-colors">
+            <Link to="/contact" className="text-gray-400 hover:text-white transition-colors">
               Contact
             </Link>
             <span className="text-gray-600">|</span>
