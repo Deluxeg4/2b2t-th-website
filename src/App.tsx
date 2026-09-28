@@ -275,6 +275,7 @@ function Commands({ lang }: { lang: 'en' | 'th' }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
           <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
             <h3 className="text-xl font-bold text-white mb-3">{t.auth.title}</h3>
+            <p className="text-sm text-gray-400 mb-4">{t.auth.note}</p>
             <div className="space-y-4">
               <div>
                 <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/reg [pw] [pw]</code>
@@ -286,29 +287,30 @@ function Commands({ lang }: { lang: 'en' | 'th' }) {
                 <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/l [pw]</code>
                 <p className="text-sm text-gray-400">{t.auth.login}</p>
               </div>
-              <div>
-                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/cp [old] [new]</code>
-                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/changepassword [old] [new]</code>
-                <p className="text-sm text-gray-400">{t.auth.changePassword}</p>
-              </div>
             </div>
           </div>
           <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
             <h3 className="text-xl font-bold text-white mb-3">{t.pm.title}</h3>
+            <p className="text-sm text-gray-400 mb-4">{t.pm.intro}</p>
             <div className="space-y-4">
               <div>
-                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/msg, /whisper, /pm, /w [name]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/msg [name]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/whisper [name]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/pm [name]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/w [name]</code>
                 <p className="text-sm text-gray-400">{t.pm.send}</p>
               </div>
               <div>
-                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/r, /reply [message]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/r [message]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/reply [message]</code>
                 <p className="text-sm text-gray-400">{t.pm.reply}</p>
+                <p className="text-xs text-yellow-500 mt-2 bg-yellow-500/10 p-2 rounded">{t.pm.warning}</p>
               </div>
               <div>
-                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/l, /last [message]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/l [message]</code>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/last [message]</code>
                 <p className="text-sm text-gray-400">{t.pm.last}</p>
               </div>
-              <p className="text-xs text-yellow-500 mt-2 bg-yellow-500/10 p-2 rounded">{t.pm.warning}</p>
             </div>
           </div>
           <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
@@ -332,85 +334,65 @@ function Commands({ lang }: { lang: 'en' | 'th' }) {
               </div>
             </div>
           </div>
+          <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
+            <h3 className="text-xl font-bold text-white mb-3">{t.chatVisibility.title}</h3>
+            <div className="space-y-4">
+              <div>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/togglechat</code>
+                <p className="text-sm text-gray-400">{t.chatVisibility.global}</p>
+              </div>
+              <div>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/toggleprivatemsgs</code>
+                <p className="text-sm text-gray-400">{t.chatVisibility.private}</p>
+              </div>
+              <div>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/toggledeathmsgs</code>
+                <p className="text-sm text-gray-400">{t.chatVisibility.deathSession}</p>
+              </div>
+              <div>
+                <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-1">/toggledeathmsgshard</code>
+                <p className="text-sm text-gray-400">{t.chatVisibility.deathPermanent}</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#353535] p-5 rounded-sm border border-[#555]">
+            <h3 className="text-xl font-bold text-white mb-3">{t.misc.title}</h3>
+            <code className="text-green-400 block bg-black/30 px-2 py-1 rounded mb-2">/kill</code>
+            <p className="text-sm text-gray-400">{t.misc.kill}</p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function ServerStability({ lang }: { lang: 'en' | 'th' }) {
-  const t = translations[lang].serverStability;
+function Terms({ lang }: { lang: 'en' | 'th' }) {
+  const t = translations[lang].terms;
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6 mt-6">
-        <div className="bg-red-500/10 border-l-4 border-red-500 p-6 rounded-r-md">
-          <h3 className="text-xl font-bold text-red-500 mb-2 flex items-center gap-2">{t.warning.title}</h3>
-          <p className="mb-4">{t.warning.desc1}<strong className="text-white">{t.warning.desc1Bold}</strong></p>
-          <p>{t.warning.desc2}</p>
+        <div className="space-y-4">
+          <p>{t.gameplay}</p>
+          <p>{t.conduct}</p>
+          <p>{t.fairPlay}</p>
         </div>
         <div className="bg-[#353535] p-6 rounded-sm border border-[#555]">
-          <h3 className="text-xl font-bold text-white mb-4">{t.crimeAct.title}</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-bold text-red-400 mb-1">{t.crimeAct.section10.title}</h4>
-              <p>{t.crimeAct.section10.desc}</p>
-            </div>
-            <div>
-              <h4 className="font-bold text-red-400 mb-1">{t.crimeAct.section13.title}</h4>
-              <p>{t.crimeAct.section13.desc}</p>
-            </div>
-          </div>
+          <h3 className="text-xl font-bold text-white mb-3">{t.communityTitle}</h3>
+          <p>{t.content}</p>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function ConnectionGuide({ lang }: { lang: 'en' | 'th' }) {
-  const t = translations[lang].connectionGuide;
-  return (
-    <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
-      <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.subTitle}</p>
-      <div className="flex flex-col gap-8">
-        <div>
-          <h3 className="text-2xl font-bold text-[#FFAA00] mb-6 flex items-center gap-2">
-            <span className="bg-[#FFAA00]/20 p-2 rounded-sm border border-[#FFAA00]/50">{t.java}</span>
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 1</h4><p className="text-sm text-gray-400">{t.javaSteps.step1}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/java-connect-multiplayer.jpg" alt="Step 1" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 2</h4><p className="text-sm text-gray-400">{t.javaSteps.step2}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/java-connect-add-server.png" alt="Step 2" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 3</h4><p className="text-sm text-gray-400">{t.javaSteps.step3}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/java-connect-enter-ip.png" alt="Step 3" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-          </div>
+        <div className="bg-[#353535] p-6 rounded-sm border border-[#555]">
+          <h3 className="text-xl font-bold text-white mb-3">{t.punishmentsTitle}</h3>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>{t.chatPunishment}</li>
+            <li>{t.serverPunishment}</li>
+          </ul>
         </div>
-        <div>
-          <h3 className="text-2xl font-bold text-[#55FF55] mb-6 flex items-center gap-2">
-            <span className="bg-[#55FF55]/20 p-2 rounded-sm border border-[#55FF55]/50">{t.bedrock}</span>
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 1</h4><p className="text-sm text-gray-400">{t.bedrockSteps.step1}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/bedrock-connect-servers.png" alt="Bedrock Step 1" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 2</h4><p className="text-sm text-gray-400">{t.bedrockSteps.step2}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/bedrock-connect-add-server.png" alt="Bedrock Step 2" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-            <div className="bg-[#353535] rounded-sm border border-[#555] overflow-hidden flex flex-col">
-              <div className="p-4 bg-[#2a2a2a] border-b border-[#555]"><h4 className="font-bold text-lg text-white">{t.step} 3</h4><p className="text-sm text-gray-400">{t.bedrockSteps.step3}</p></div>
-              <div className="p-4 flex-1 flex items-center justify-center bg-[#1a1a1a]"><img src="/bedrock-connect-enter-ip.png" alt="Bedrock Step 3" className="max-w-full h-auto rounded shadow-sm object-contain" /></div>
-            </div>
-          </div>
+        <div className="bg-[#353535] p-6 rounded-sm border border-[#555]">
+          <h3 className="text-xl font-bold text-white mb-3">{t.reportingTitle}</h3>
+          <p>{t.reporting}
+            <a href="mailto:support@2b2t.org" className="text-blue-400 hover:underline">support@2b2t.org</a>
+          </p>
         </div>
       </div>
     </div>
@@ -694,14 +676,11 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
           </div>
           <h3 className="text-xl font-bold text-white">{isThai ? 'ลิงก์สำคัญ' : 'Useful Links'}</h3>
           <div className="flex flex-col gap-3 mt-4">
-            <Link to="/connection-guide" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
-              {isThai ? 'วิธีเข้าเล่น' : 'Connection Guide'}
+            <Link to="/terms" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
+              {isThai ? 'ข้อกำหนด' : 'Terms'}
             </Link>
             <Link to="/updates" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
               {isThai ? 'อัปเดตล่าสุด' : 'Latest Updates'}
-            </Link>
-            <Link to="/server-stability" className="h-11 px-4 rounded-sm bg-[#2f2f2f] border border-[#555] text-white hover:bg-[#5a5a5a] transition-colors flex items-center justify-center">
-              {isThai ? 'เสถียรภาพเซิร์ฟเวอร์' : 'Server Stability'}
             </Link>
           </div>
         </div>
@@ -937,7 +916,8 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
     return service?.up ?? null;
   };
   const serverOnline = serviceStatus('minecraft');
-  const configuredServices = Object.entries(liveStatus?.services || {}).filter(([, service]) => service.configured);
+  const services = Object.entries(liveStatus?.services || {}) as [string, LiveStatus['services'][string]][];
+  const configuredServices = services.filter(([, service]) => service.configured);
   const hasOfflineService = configuredServices.some(([id, service]) => {
     const effectiveStatus = id === 'minecraft' || (id === 'queue' && service.derived) ? serverOnline : service.up;
     return effectiveStatus === false;
@@ -991,7 +971,6 @@ export default function App() {
   const [lang, setLang] = useState<'en' | 'th'>('th');
   const [updates, setUpdates] = useState<any[]>([]);
   const [loadingUpdates, setLoadingUpdates] = useState(true);
-  const [showShopPopup, setShowShopPopup] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -1066,12 +1045,10 @@ export default function App() {
 
   const navItems = [
     { name: translations[lang].nav.home, path: '/', matchPath: '/' },
-    { name: translations[lang].nav.updates, path: '/updates', matchPath: '/updates' },
     { name: translations[lang].nav.modifications, path: '/modifications', matchPath: '/modifications' },
     { name: translations[lang].nav.commands, path: '/commands', matchPath: '/commands' },
-    { name: translations[lang].nav.connectionGuide, path: '/connection-guide', matchPath: '/connection-guide' },
-    { name: translations[lang].nav.serverStability, path: '/server-stability', matchPath: '/server-stability' },
-    { name: translations[lang].nav.about, path: '/about', matchPath: '/about' }
+    { name: translations[lang].nav.about, path: '/about', matchPath: '/about' },
+    { name: translations[lang].nav.terms, path: '/terms', matchPath: '/terms' }
   ];
 
   const t = translations[lang];
@@ -1126,21 +1103,6 @@ export default function App() {
                 <Menu size={18} />
                 {t.nav.menu}
               </button>
-              <div className="ml-auto flex shrink-0 items-center gap-1">
-                <Link
-                  to="/partner"
-                  className={`flex min-h-10 items-center justify-center whitespace-nowrap rounded-sm px-2.5 text-xs font-medium ${localizedPath === '/partner' ? 'bg-white text-black' : 'text-white hover:bg-[#5a5a5a]'}`}
-                >
-                  {t.nav.partner}
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setShowShopPopup(true)}
-                  className="flex min-h-10 items-center justify-center whitespace-nowrap rounded-sm bg-[#3b82f6] px-2.5 text-xs font-medium text-white hover:bg-[#2563eb]"
-                >
-                  {t.nav.shop}
-                </button>
-              </div>
             </div>
             <div
               className={`fixed inset-0 z-50 md:hidden ${isMobileMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
@@ -1211,43 +1173,8 @@ export default function App() {
                 {item.name}
               </Link>
             ))}
-            <Link
-              to="/partner"
-              className={`min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:ml-auto md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center ${localizedPath === '/partner'
-                  ? 'bg-white text-black'
-                  : 'bg-transparent text-white hover:bg-[#5a5a5a]'
-                }`}
-            >
-              {t.nav.partner}
-            </Link>
-            <button onClick={() => setShowShopPopup(true)} className="min-w-0 min-h-11 w-full px-2 py-2 text-xs leading-tight md:min-h-12 md:h-12 md:w-auto md:px-3 md:py-0 md:text-base rounded-sm font-medium transition-colors whitespace-normal break-words md:whitespace-nowrap md:shrink-0 flex items-center justify-center text-center bg-[#3b82f6] text-white hover:bg-[#2563eb]">{t.nav.shop}</button>
             </nav>
           </div>
-
-          {showShopPopup && (
-            <div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="shop-popup-title"
-              onClick={() => setShowShopPopup(false)}
-            >
-              <div
-                className="w-full max-w-sm bg-[#454545] border border-[#666] rounded-sm shadow-2xl p-6 text-white text-left"
-                onClick={(event) => event.stopPropagation()}
-              >
-                <h2 id="shop-popup-title" className="text-2xl font-bold tracking-wide">{t.nav.shopComingSoonTitle}</h2>
-                <p className="text-gray-300 mt-3 leading-relaxed">{t.nav.shopComingSoonDesc}</p>
-                <button
-                  type="button"
-                  onClick={() => setShowShopPopup(false)}
-                  className="mt-6 w-full h-11 rounded-sm bg-white text-black font-bold hover:bg-gray-200 transition-colors"
-                >
-                  OK
-                </button>
-              </div>
-            </div>
-          )}
 
           <Routes>
             <Route path="/en" element={<Home lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} updates={updates} loadingUpdates={loadingUpdates} />} />
@@ -1258,10 +1185,12 @@ export default function App() {
             <Route path="/th/modifications" element={<Modifications lang={lang} />} />
             <Route path="/en/commands" element={<Commands lang={lang} />} />
             <Route path="/th/commands" element={<Commands lang={lang} />} />
-            <Route path="/en/connection-guide" element={<ConnectionGuide lang={lang} />} />
-            <Route path="/th/connection-guide" element={<ConnectionGuide lang={lang} />} />
-            <Route path="/en/server-stability" element={<ServerStability lang={lang} />} />
-            <Route path="/th/server-stability" element={<ServerStability lang={lang} />} />
+            <Route path="/en/connection-guide" element={<Navigate to="/terms" replace />} />
+            <Route path="/th/connection-guide" element={<Navigate to="/terms" replace />} />
+            <Route path="/en/server-stability" element={<Navigate to="/terms" replace />} />
+            <Route path="/th/server-stability" element={<Navigate to="/terms" replace />} />
+            <Route path="/en/terms" element={<Terms lang={lang} />} />
+            <Route path="/th/terms" element={<Terms lang={lang} />} />
             <Route path="/en/about" element={<About lang={lang} />} />
             <Route path="/th/about" element={<About lang={lang} />} />
             <Route path="/en/partner" element={<Partner lang={lang} />} />
@@ -1272,8 +1201,9 @@ export default function App() {
             <Route path="/updates" element={<Updates lang={lang} updates={updates} loadingUpdates={loadingUpdates} />} />
             <Route path="/modifications" element={<Modifications lang={lang} />} />
             <Route path="/commands" element={<Commands lang={lang} />} />
-            <Route path="/connection-guide" element={<ConnectionGuide lang={lang} />} />
-            <Route path="/server-stability" element={<ServerStability lang={lang} />} />
+            <Route path="/connection-guide" element={<Navigate to="/terms" replace />} />
+            <Route path="/server-stability" element={<Navigate to="/terms" replace />} />
+            <Route path="/terms" element={<Terms lang={lang} />} />
             <Route path="/about" element={<About lang={lang} />} />
             <Route path="/partner" element={<Partner lang={lang} />} />
             <Route path="/contact" element={<Contact lang={lang} />} />

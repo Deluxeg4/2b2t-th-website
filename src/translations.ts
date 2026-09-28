@@ -6,8 +6,7 @@ export const translations = {
       updates: "Updates",
       modifications: "Modifications",
       commands: "Commands",
-      connectionGuide: "Connection Guide",
-      serverStability: "Server Stability",
+      terms: "Terms",
       about: "About",
       partner: "Partner",
       shop: "Shop",
@@ -69,64 +68,52 @@ export const translations = {
     commands: {
       title: "Commands",
       lastEdit: "Edit May 3, 2026",
-      desc: "These are the chat and utility commands available on 2b2t Thailand.",
+      desc: "These are all the chat commands that are available.",
       auth: {
         title: "Authentication",
-        register: "To sign up the username",
-        login: "To sign in",
-        changePassword: "To change the password"
+        note: "Registration and login are only for cracked/offline accounts. Premium players can join directly.",
+        register: "Register a cracked/offline account.",
+        login: "Log in to a cracked/offline account."
       },
       pm: {
         title: "Private Messages",
-        send: "Send private messages to other players.",
+        intro: "To send a private message to a player, you can click on their name in chat, or use any of these commands:",
+        send: "Send a private message to a player.",
         reply: "Reply to the last player who messaged you.",
         last: "Reply to the last player you messaged.",
-        warning: "Be careful when using quick reply commands, as messages may accidentally be sent to the wrong player."
+        warning: "Be aware that this sends your message to the player that last messaged you. You may accidentally send your message to the wrong player."
       },
       ignore: {
         title: "Ignoring Players",
-        temp: "Temporarily ignores a player until reconnecting.",
-        hard: "Permanently ignores a player. Use again to unignore.",
-        list: "Displays all permanently ignored players.",
-        death: "Hides death messages from a specific player."
+        temp: "This will ignore a player temporarily, and is cleared periodically.",
+        hard: "This will ignore a player permanently, saved to your ignore list. You can repeat this command with the playername you wish to unignore.",
+        list: "This will display a list of players you have ignored permanently. You can click on the button next to a player's name to unignore them.",
+        death: "This will hide a player's death messages."
+      },
+      chatVisibility: {
+        title: "Chat visibility",
+        global: "This will toggle the visibility of the default global chat.",
+        private: "This will toggle the visibility of private messages.",
+        deathSession: "This will toggle the visibility of death messages until you disconnect from the server.",
+        deathPermanent: "This will toggle the visibility of death messages permanently, saved when disconnecting from the server."
+      },
+      misc: {
+        title: "Miscellaneous",
+        kill: "Instantly kills your player."
       }
     },
-    serverStability: {
-      title: "Server Stability",
-      warning: {
-        title: "Warning",
-        desc1: "To maintain fair gameplay and stable server performance for all players, ",
-        desc1Bold: "any form of malicious activity targeting the server infrastructure is strictly prohibited.",
-        desc2: "DDoS attacks, botnet activities, malicious traffic flooding, exploit attempts against network systems, or any action intended to disrupt server availability may result in immediate permanent bans, network blacklisting, and reports to hosting providers or relevant authorities."
-      },
-      crimeAct: {
-        title: "Under the Computer-Related Crime Act:",
-        section10: {
-          title: "Section 10",
-          desc: "Interfering with or obstructing a computer system in a way that prevents normal operation may result in imprisonment for up to 5 years, a fine of up to 100,000 THB, or both."
-        },
-        section13: {
-          title: "Section 13",
-          desc: "Creating, distributing, or possessing software, scripts, or instruction sets intended for committing computer-related offenses may result in imprisonment for up to 1 year, a fine of up to 20,000 THB, or both."
-        }
-      }
-    },
-    connectionGuide: {
-      title: "How to connect for Java/Bedrock",
-      subTitle: "Connection Guide",
-      java: "Java Edition",
-      bedrock: "Bedrock Edition",
-      step: "Step",
-      javaSteps: {
-        step1: "Click on Multiplayer",
-        step2: "Click Add Server",
-        step3: "Enter IP: 2b2t-th.org"
-      },
-      bedrockSteps: {
-        step1: "Click Play, then Servers tab",
-        step2: "Click Add Server",
-        step3: "Enter IP: 2b2t-th.org Port: 19132"
-      }
+    terms: {
+      title: "Terms",
+      gameplay: "The server hosts the survival gamemode as provided by Mojang, an open ended sandbox, in which there are no inherent rules related to gameplay elements like PvP and griefing. This enables a chaotic and harsh world where players can fight and destroy whoever and whatever they wish if they choose.",
+      conduct: "However, it does not in any way invite or incite players to be toxic or harassing beyond the game.",
+      fairPlay: "Do not attempt to undermine the server's efforts to provide every player an equal and fair playing environment, through means such as abusing any exploit, bug or flawed game mechanic to cause server disruption or lag.",
+      communityTitle: "Chat and community guidelines",
+      content: "Do not create builds, structures, or any other content relating to harmful ideas, hateful symbols, or hateful speech.",
+      punishmentsTitle: "Punishments",
+      chatPunishment: "You may have your chat privileges temporarily or permanently disabled.",
+      serverPunishment: "You may have your access to the server temporarily or permanently disabled, depending on the severity.",
+      reportingTitle: "Reporting",
+      reporting: "Send any reports and include proof to "
     },
     about: {
       title: "About",
@@ -142,8 +129,7 @@ export const translations = {
       updates: "อัปเดต",
       modifications: "การปรับแต่ง",
       commands: "คำสั่ง",
-      connectionGuide: "วิธีเข้าเล่น",
-      serverStability: "เสถียรภาพเซิร์ฟเวอร์",
+      terms: "ข้อกำหนด",
       about: "เกี่ยวกับ",
       partner: "พาร์ทเนอร์",
       shop: "ร้านค้า",
@@ -205,64 +191,52 @@ export const translations = {
     commands: {
       title: "คำสั่ง",
       lastEdit: "แก้ไขเมื่อ 3 พฤษภาคม 2026",
-      desc: "นี่คือคำสั่งแชทและคำสั่งอำนวยความสะดวกที่มีให้ใช้งานบน 2b2t Thailand",
+      desc: "นี่คือคำสั่งแชททั้งหมดที่สามารถใช้งานได้",
       auth: {
         title: "การยืนยันตัวตน",
-        register: "เพื่อลงทะเบียนชื่อผู้ใช้",
-        login: "เพื่อเข้าสู่ระบบ",
-        changePassword: "เพื่อเปลี่ยนรหัสผ่าน"
+        note: "การลงทะเบียนและเข้าสู่ระบบใช้สำหรับบัญชีเถื่อน (Cracked/Offline) เท่านั้น ผู้เล่น Premium สามารถเข้าเล่นได้เลย",
+        register: "ลงทะเบียนบัญชีเถื่อน (Cracked/Offline)",
+        login: "เข้าสู่ระบบด้วยบัญชีเถื่อน (Cracked/Offline)"
       },
       pm: {
         title: "ข้อความส่วนตัว",
-        send: "ส่งข้อความส่วนตัวไปยังผู้เล่นคนอื่น",
+        intro: "หากต้องการส่งข้อความส่วนตัวถึงผู้เล่น คุณสามารถคลิกชื่อของผู้เล่นในแชท หรือใช้คำสั่งต่อไปนี้:",
+        send: "ส่งข้อความส่วนตัวถึงผู้เล่น",
         reply: "ตอบกลับผู้เล่นคนล่าสุดที่ส่งข้อความถึงคุณ",
         last: "ตอบกลับผู้เล่นคนล่าสุดที่คุณส่งข้อความหา",
-        warning: "โปรดระมัดระวังเมื่อใช้คำสั่งตอบกลับด่วน เนื่องจากข้อความอาจถูกส่งไปยังผู้เล่นผิดคนโดยไม่ได้ตั้งใจ"
+        warning: "โปรดทราบว่าคำสั่งนี้จะส่งข้อความถึงผู้เล่นคนล่าสุดที่ส่งข้อความหาคุณ คุณอาจส่งข้อความไปผิดคนได้"
       },
       ignore: {
         title: "การปิดกั้นผู้เล่น",
-        temp: "ปิดกั้นผู้เล่นชั่วคราวจนกว่าจะเชื่อมต่อใหม่",
-        hard: "ปิดกั้นผู้เล่นถาวร ใช้ซ้ำอีกครั้งเพื่อยกเลิกการปิดกั้น",
-        list: "แสดงรายชื่อผู้เล่นที่ถูกปิดกั้นถาวรทั้งหมด",
-        death: "ซ่อนข้อความการตายจากผู้เล่นที่ระบุ"
+        temp: "คำสั่งนี้จะปิดกั้นผู้เล่นชั่วคราว และข้อมูลจะถูกล้างเป็นระยะ",
+        hard: "คำสั่งนี้จะปิดกั้นผู้เล่นถาวรและบันทึกไว้ในรายชื่อที่ปิดกั้น ใช้คำสั่งซ้ำพร้อมชื่อผู้เล่นที่ต้องการยกเลิกการปิดกั้น",
+        list: "คำสั่งนี้จะแสดงรายชื่อผู้เล่นที่คุณปิดกั้นไว้อย่างถาวร คุณสามารถคลิกปุ่มข้างชื่อผู้เล่นเพื่อยกเลิกการปิดกั้นได้",
+        death: "คำสั่งนี้จะซ่อนข้อความการตายของผู้เล่นที่ระบุ"
+      },
+      chatVisibility: {
+        title: "การแสดงแชท",
+        global: "คำสั่งนี้จะสลับการแสดงแชททั่วโลกเริ่มต้น",
+        private: "คำสั่งนี้จะสลับการแสดงข้อความส่วนตัว",
+        deathSession: "คำสั่งนี้จะสลับการแสดงข้อความการตายจนกว่าคุณจะออกจากเซิร์ฟเวอร์",
+        deathPermanent: "คำสั่งนี้จะสลับการแสดงข้อความการตายอย่างถาวร และบันทึกการตั้งค่าไว้เมื่อออกจากเซิร์ฟเวอร์"
+      },
+      misc: {
+        title: "เบ็ดเตล็ด",
+        kill: "ทำให้ตัวละครของคุณตายทันที"
       }
     },
-    serverStability: {
-      title: "ความเสถียรของเซิร์ฟเวอร์",
-      warning: {
-        title: "คำเตือน",
-        desc1: "เพื่อรักษาการเล่นที่ยุติธรรมและประสิทธิภาพของเซิร์ฟเวอร์ที่เสถียรสำหรับผู้เล่นทุกคน ",
-        desc1Bold: "ห้ามทำกิจกรรมที่เป็นอันตรายใดๆ ที่พุ่งเป้าไปที่โครงสร้างพื้นฐานของเซิร์ฟเวอร์โดยเด็ดขาด",
-        desc2: "การโจมตีแบบ DDoS, กิจกรรม Botnet, การส่งทราฟฟิกที่เป็นอันตราย, การพยายามใช้ช่องโหว่โจมตีระบบเครือข่าย หรือการกระทำใดๆ ที่มีเจตนาขัดขวางการให้บริการของเซิร์ฟเวอร์ อาจส่งผลให้ถูกแบนถาวรทันที ถูกบัญชีดำในเครือข่าย และรายงานไปยังผู้ให้บริการโฮสติ้งหรือหน่วยงานที่เกี่ยวข้อง"
-      },
-      crimeAct: {
-        title: "ภายใต้พระราชบัญญัติว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์:",
-        section10: {
-          title: "มาตรา 10",
-          desc: "ผู้ใดกระทำด้วยประการใดโดยมิชอบ เพื่อให้การทำงานของระบบคอมพิวเตอร์ของผู้อื่นถูกระงับ ชะลอ ขัดขวาง หรือรบกวนจนไม่สามารถทำงานตามปกติได้ ต้องระวางโทษจำคุกไม่เกิน 5 ปี หรือปรับไม่เกิน 100,000 บาท หรือทั้งจำทั้งปรับ"
-        },
-        section13: {
-          title: "มาตรา 13",
-          desc: "ผู้ใดจำหน่ายหรือเผยแพร่ชุดคำสั่งที่จัดทำขึ้นโดยเฉพาะเพื่อนำไปใช้เป็นเครื่องมือในการกระทำความผิด ต้องระวางโทษจำคุกไม่เกิน 1 ปี หรือปรับไม่เกิน 20,000 บาท หรือทั้งจำทั้งปรับ"
-        }
-      }
-    },
-    connectionGuide: {
-      title: "วิธีเข้าเล่นสำหรับ Java/Bedrock",
-      subTitle: "คู่มือการเชื่อมต่อ",
-      java: "Java Edition",
-      bedrock: "Bedrock Edition",
-      step: "ขั้นตอนที่",
-      javaSteps: {
-        step1: "คลิกที่ Multiplayer",
-        step2: "คลิก Add Server",
-        step3: "ใส่ IP: 2b2t-th.org"
-      },
-      bedrockSteps: {
-        step1: "คลิก Play แล้วไปที่แถบ Servers",
-        step2: "คลิก Add Server",
-        step3: "ใส่ IP: 2b2t-th.org Port: 19132"
-      }
+    terms: {
+      title: "ข้อกำหนดการใช้งาน",
+      gameplay: "เซิร์ฟเวอร์ใช้โหมดเอาชีวิตรอดตามรูปแบบที่ Mojang จัดทำไว้ ซึ่งเป็นแซนด์บ็อกซ์แบบเปิดกว้างและไม่มีกฎที่กำหนดไว้กับองค์ประกอบการเล่น เช่น PvP และการทำลายสิ่งปลูกสร้าง จึงทำให้โลกมีความวุ่นวายและท้าทาย ผู้เล่นสามารถต่อสู้และทำลายผู้เล่นหรือสิ่งต่างๆ ได้ตามที่ต้องการ",
+      conduct: "อย่างไรก็ตาม นี่ไม่ได้เป็นการเชื้อเชิญหรือส่งเสริมให้ผู้เล่นแสดงพฤติกรรมเป็นพิษหรือคุกคามกันนอกเหนือจากภายในเกม",
+      fairPlay: "ห้ามบ่อนทำลายความพยายามของเซิร์ฟเวอร์ในการจัดสภาพแวดล้อมการเล่นที่เท่าเทียมและเป็นธรรมสำหรับผู้เล่นทุกคน เช่น การใช้ประโยชน์จากช่องโหว่ บั๊ก หรือกลไกของเกมที่ผิดพลาดเพื่อทำให้เซิร์ฟเวอร์ขัดข้องหรือเกิดอาการแลค",
+      communityTitle: "แนวทางการใช้แชทและชุมชน",
+      content: "ห้ามสร้างสิ่งปลูกสร้าง โครงสร้าง หรือเนื้อหาอื่นใดที่เกี่ยวข้องกับแนวคิดที่เป็นอันตราย สัญลักษณ์แสดงความเกลียดชัง หรือถ้อยคำแสดงความเกลียดชัง",
+      punishmentsTitle: "บทลงโทษ",
+      chatPunishment: "สิทธิ์ในการใช้แชทของคุณอาจถูกระงับชั่วคราวหรือถาวร",
+      serverPunishment: "การเข้าใช้เซิร์ฟเวอร์ของคุณอาจถูกระงับชั่วคราวหรือถาวร โดยขึ้นอยู่กับความร้ายแรงของการกระทำ",
+      reportingTitle: "การรายงาน",
+      reporting: "ส่งรายงานพร้อมแนบหลักฐานไปที่ "
     },
     about: {
       title: "เกี่ยวกับ",
