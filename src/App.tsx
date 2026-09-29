@@ -783,19 +783,20 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
   );
 }
 type ServiceStatus = {
-  id: 'minecraft' | 'queue' | 'website';
+  id: 'minecraft' | 'queue' | 'login' | 'website';
 };
 
 type LiveStatus = {
   checkedAt: string;
   hasHistory: boolean;
-  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; latencyMs?: number | null; players?: number | null; derived?: boolean; history: { ts: string; up: boolean }[] }>;
+  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; latencyMs?: number | null; source?: string | null; players?: number | null; derived?: boolean; history: { ts: string; up: boolean }[] }>;
   metrics: { ts: string; players: number }[];
 };
 
 const statusServices: ServiceStatus[] = [
   { id: 'minecraft' },
   { id: 'queue' },
+  { id: 'login' },
   { id: 'website' },
 ];
 
@@ -891,7 +892,7 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
         if (!mounted) return;
         setLiveStatus(data);
         setLastCheckedAt(new Date());
-        if (typeof data.services?.minecraft?.latencyMs !== 'number') {
+        if (typeof data.services?.minecraft?.latencyMs !== 'number' && data.services?.minecraft?.source !== 'velocity') {
           setMinecraftFallback(await fetchPublicMinecraftStatus());
         } else {
           setMinecraftFallback(null);
@@ -907,7 +908,7 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
     const timer = window.setInterval(check, 30000);
     return () => { mounted = false; window.clearInterval(timer); };
   }, []);
-  const minecraftMonitorFailed = Boolean(liveStatus && typeof liveStatus.services.minecraft?.latencyMs !== 'number');
+  const minecraftMonitorFailed = Boolean(liveStatus && typeof liveStatus.services.minecraft?.latencyMs !== 'number' && liveStatus.services.minecraft?.source !== 'velocity');
   const serviceStatus = (id: ServiceStatus['id']) => {
     const service = liveStatus?.services[id];
     if (service?.configured === false) return null;
@@ -936,7 +937,11 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
         ? (isThai ? 'กำลังตรวจสอบสถานะบางบริการ…' : 'Checking some services…')
         : (isThai ? 'ระบบทั้งหมดทำงานปกติ' : 'All systems operational');
   const serviceLabel = (id: ServiceStatus['id']) => liveStatus?.services[id]?.configured === false ? (isThai ? 'ยังไม่ได้ตั้งค่า' : 'Not configured') : serviceStatus(id) === null ? (isThai ? 'กำลังตรวจสอบ' : 'Checking') : serviceStatus(id) ? (isThai ? 'ปกติ' : 'Operational') : (isThai ? 'ออฟไลน์' : 'Offline');
-  const serviceName = (id: ServiceStatus['id']) => id === 'minecraft' ? 'Minecraft Server' : id === 'queue' ? 'Queue' : isThai ? 'เว็บไซต์' : 'Website';
+  const serviceName = (id: ServiceStatus['id']) => id === 'minecraft'
+    ? (isThai ? 'เซิร์ฟเวอร์หลัก' : 'Main server')
+    : id === 'queue' ? 'Queue'
+      : id === 'login' ? (isThai ? 'เซิร์ฟเวอร์ล็อกอิน' : 'Login server')
+        : isThai ? 'เว็บไซต์' : 'Website';
   const overallIcon = hasOfflineService ? <Activity size={22} /> : <CheckCircle2 size={22} />;
   const formattedCheckedAt = lastCheckedAt?.toLocaleTimeString(isThai ? 'th-TH' : 'en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   return <div className="status-page">
@@ -954,7 +959,8 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
           const queueCount = service.id === 'queue' ? minecraftFallback?.queuePlayers ?? item?.players : null;
           const uptime = monitorUnavailable ? null : item?.uptime;
           const history = monitorUnavailable ? [] : item?.history || [];
-          const detail = service.id === 'minecraft' && playerCount != null ? `${playerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'queue' && queueCount != null ? `${queueCount} ${isThai ? 'คนในคิว' : 'queued'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page available') : uptime != null ? `${uptime}%` : '—';
+          const loginPlayerCount = service.id === 'login' ? item?.players : null;
+          const detail = service.id === 'minecraft' && playerCount != null ? `${playerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'queue' && queueCount != null ? `${queueCount} ${isThai ? 'คนในคิว' : 'queued'}` : service.id === 'login' && loginPlayerCount != null ? `${loginPlayerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page available') : uptime != null ? `${uptime}%` : '—';
           return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars live={live} history={history} /></div>;
         })}
       </section>

@@ -5,11 +5,23 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
 
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
 const MAX_SAMPLES = 90 * 24 * 12; // Five-minute samples for 90 days.
+const VELOCITY_STATUS_MAX_AGE_MS = 30 * 1000;
 
 const readHistory = async (env, key) => {
   if (!env.STATUS_KV) return [];
   return (await env.STATUS_KV.get(`history:${key}`, 'json')) || [];
 };
+
+const readVelocityStatus = async (env) => {
+  if (!env.STATUS_KV) return null;
+  const snapshot = await env.STATUS_KV.get('velocity:latest', 'json');
+  const receivedAt = Date.parse(snapshot?.receivedAt);
+  const age = Date.now() - receivedAt;
+  if (!snapshot || !Number.isFinite(receivedAt) || age < 0 || age > VELOCITY_STATUS_MAX_AGE_MS) return null;
+  return snapshot;
+};
+
+const snapshotUp = (snapshot) => snapshot?.status === 'online' ? true : snapshot?.status === 'offline' ? false : null;
 
 const checkUrl = async (url, timeoutMs = 8000) => {
   if (!url) return { configured: false, up: null, responseTimeMs: null };
@@ -78,27 +90,39 @@ const toStatus = (service) => {
   return service.up ? 'operational' : 'outage';
 };
 
-const makeServices = async (env, minecraft) => {
+const makeServices = async (env, minecraft, velocityStatus) => {
   const [queueCheck, website, shop] = await Promise.all([
     env.QUEUE_HEALTH_URL ? checkUrl(env.QUEUE_HEALTH_URL) : Promise.resolve(null),
     checkUrl(env.WEBSITE_HEALTH_URL || 'https://2b2t-th.org/'),
     checkUrl(env.SHOP_HEALTH_URL),
   ]);
-  const mainServer = { configured: true, up: minecraft.up, responseTimeMs: minecraft.responseTimeMs };
-  const queue = queueCheck || { configured: true, up: minecraft.up, responseTimeMs: minecraft.responseTimeMs, derived: true };
+  const mainSnapshot = velocityStatus?.main;
+  const loginSnapshot = velocityStatus?.login;
+  const mainServer = mainSnapshot
+    ? { configured: mainSnapshot.status !== 'unconfigured', up: snapshotUp(mainSnapshot), players: mainSnapshot.players, responseTimeMs: null, source: 'velocity' }
+    : { configured: true, up: minecraft.up, players: minecraft.players, responseTimeMs: minecraft.responseTimeMs, source: minecraft.source };
+  const loginServer = loginSnapshot
+    ? { configured: loginSnapshot.status !== 'unconfigured', up: snapshotUp(loginSnapshot), players: loginSnapshot.players, responseTimeMs: null, source: 'velocity' }
+    : { configured: true, up: null, players: null, responseTimeMs: null, source: 'velocity' };
+  const queue = queueCheck || { configured: true, up: mainServer.up, responseTimeMs: mainServer.responseTimeMs, derived: true };
   const minecraftGroup = { configured: true, up: mainServer.up === false || queue.up === false ? false : (mainServer.up && queue.up ? true : null) };
   return [
     { id: 'minecraft', name: 'Minecraft', ...minecraftGroup },
     { id: 'queue', name: 'Queue', ...queue, players: minecraft.queuePlayers },
     { id: 'main-server', name: 'Main server', ...mainServer },
+    { id: 'login-server', name: 'Login server', ...loginServer },
     { id: 'website', name: 'Website', ...website },
     { id: 'shop', name: 'Shop', ...shop },
   ].map((service) => ({ ...service, status: toStatus(service) }));
 };
 
 const currentStatus = async (env) => {
-  const minecraft = await checkMinecraft();
-  const services = await makeServices(env, minecraft);
+  const velocityStatus = await readVelocityStatus(env);
+  const minecraft = velocityStatus
+    ? { configured: true, up: snapshotUp(velocityStatus.main), players: velocityStatus.main.players, maxPlayers: null, queuePlayers: null, responseTimeMs: null, source: 'velocity' }
+    : await checkMinecraft();
+  const services = await makeServices(env, minecraft, velocityStatus);
+  const mainServer = services.find((service) => service.id === 'main-server');
   const checkedAt = new Date().toISOString();
   const activeServices = services.filter((service) => service.status !== 'not_configured');
   const overallStatus = activeServices.some((service) => service.status === 'outage')
@@ -107,7 +131,7 @@ const currentStatus = async (env) => {
   return {
     overallStatus,
     services,
-    playerCount: { online: minecraft.players, max: minecraft.maxPlayers },
+    playerCount: { online: mainServer?.players ?? minecraft.players, max: minecraft.maxPlayers },
     checkedAt,
     responseTimeMs: minecraft.responseTimeMs,
   };
@@ -211,16 +235,20 @@ const toLegacyDashboardPayload = async (env, status) => {
       up: service?.up ?? null,
       uptime,
       latencyMs: service?.responseTimeMs ?? null,
+      source: service?.source ?? null,
       history,
       ...extra,
     };
   };
-  const [minecraft, queue, website, shop] = await Promise.all([
+  const [minecraft, queue, login, website, shop] = await Promise.all([
     legacyService('main-server', 'minecraft', {
       players: status.playerCount.online,
       queuePlayers: serviceById.queue?.players ?? null,
     }),
     legacyService('queue'),
+    legacyService('login-server', 'login-server', {
+      players: serviceById['login-server']?.players ?? null,
+    }),
     legacyService('website'),
     legacyService('shop'),
   ]);
@@ -232,7 +260,7 @@ const toLegacyDashboardPayload = async (env, status) => {
   return {
     checkedAt: status.checkedAt,
     hasHistory: Boolean(env.STATUS_KV),
-    services: { minecraft, queue, website, shop },
+    services: { minecraft, queue, login, website, shop },
     metrics,
   };
 };
@@ -254,6 +282,36 @@ export default {
     if (shouldRedirectToRoot) {
       url.hostname = '2b2t-th.org';
       return Response.redirect(url.toString(), 301);
+    }
+
+    if (url.pathname === '/api/velocity-status') {
+      if (request.method !== 'POST') {
+        return json({ error: 'method_not_allowed' }, { status: 405, headers: { allow: 'POST' } });
+      }
+      const expectedToken = env.VELOCITY_STATUS_TOKEN;
+      if (!expectedToken) return json({ error: 'velocity_status_not_configured' }, { status: 503 });
+      const authorization = request.headers.get('authorization') || '';
+      if (authorization !== `Bearer ${expectedToken}`) return json({ error: 'unauthorized' }, { status: 401 });
+      if (!env.STATUS_KV) return json({ error: 'status_storage_unavailable' }, { status: 503 });
+      let payload;
+      try {
+        payload = await request.json();
+      } catch {
+        return json({ error: 'invalid_json' }, { status: 400 });
+      }
+      const validSnapshot = (snapshot) => snapshot &&
+        ['checking', 'online', 'offline', 'unconfigured'].includes(snapshot.status) &&
+        Number.isInteger(snapshot.players) && snapshot.players >= 0 && snapshot.players <= 100000;
+      if (!validSnapshot(payload?.main) || !validSnapshot(payload?.login)) {
+        return json({ error: 'invalid_status_payload' }, { status: 400 });
+      }
+      const snapshot = {
+        main: { status: payload.main.status, players: payload.main.players },
+        login: { status: payload.login.status, players: payload.login.players },
+        receivedAt: new Date().toISOString(),
+      };
+      await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 120 });
+      return json({ ok: true, receivedAt: snapshot.receivedAt }, { headers: { 'cache-control': 'no-store' } });
     }
 
     if (url.pathname === '/api/status') {
