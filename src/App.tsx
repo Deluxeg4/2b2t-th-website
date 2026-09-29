@@ -993,6 +993,10 @@ export default function App() {
   const statusLabel = isThai ? 'สถานะระบบ' : 'Status';
 
   useEffect(() => {
+    document.title = localizedPath === '/status' ? '2b2t-th - Status' : '2b2t-th';
+  }, [localizedPath]);
+
+  useEffect(() => {
     const fetchServerStatus = async () => {
       try {
         const response = await fetch('https://api.mcsrvstat.us/3/2b2t-th.org');
