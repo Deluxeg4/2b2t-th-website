@@ -97,20 +97,18 @@ const makeServices = async (env, minecraft, velocityStatus) => {
     checkUrl(env.SHOP_HEALTH_URL),
   ]);
   const mainSnapshot = velocityStatus?.main;
-  const loginSnapshot = velocityStatus?.login;
+  const queueSnapshot = velocityStatus?.queue;
   const mainServer = mainSnapshot
     ? { configured: mainSnapshot.status !== 'unconfigured', up: snapshotUp(mainSnapshot), players: mainSnapshot.players, responseTimeMs: null, source: 'velocity' }
     : { configured: true, up: minecraft.up, players: minecraft.players, responseTimeMs: minecraft.responseTimeMs, source: minecraft.source };
-  const loginServer = loginSnapshot
-    ? { configured: loginSnapshot.status !== 'unconfigured', up: snapshotUp(loginSnapshot), players: loginSnapshot.players, responseTimeMs: null, source: 'velocity' }
-    : { configured: true, up: null, players: null, responseTimeMs: null, source: 'velocity' };
-  const queue = queueCheck || { configured: true, up: mainServer.up, responseTimeMs: mainServer.responseTimeMs, derived: true };
+  const queue = queueSnapshot
+    ? { configured: queueSnapshot.status !== 'unconfigured', up: snapshotUp(queueSnapshot), responseTimeMs: null, source: 'velocity' }
+    : queueCheck || { configured: true, up: mainServer.up, responseTimeMs: mainServer.responseTimeMs, derived: true };
   const minecraftGroup = { configured: true, up: mainServer.up === false || queue.up === false ? false : (mainServer.up && queue.up ? true : null) };
   return [
     { id: 'minecraft', name: 'Minecraft', ...minecraftGroup },
     { id: 'queue', name: 'Queue', ...queue, players: minecraft.queuePlayers },
     { id: 'main-server', name: 'Main server', ...mainServer },
-    { id: 'login-server', name: 'Login server', ...loginServer },
     { id: 'website', name: 'Website', ...website },
     { id: 'shop', name: 'Shop', ...shop },
   ].map((service) => ({ ...service, status: toStatus(service) }));
@@ -240,15 +238,12 @@ const toLegacyDashboardPayload = async (env, status) => {
       ...extra,
     };
   };
-  const [minecraft, queue, login, website, shop] = await Promise.all([
+  const [minecraft, queue, website, shop] = await Promise.all([
     legacyService('main-server', 'minecraft', {
       players: status.playerCount.online,
       queuePlayers: serviceById.queue?.players ?? null,
     }),
     legacyService('queue'),
-    legacyService('login-server', 'login-server', {
-      players: serviceById['login-server']?.players ?? null,
-    }),
     legacyService('website'),
     legacyService('shop'),
   ]);
@@ -260,7 +255,7 @@ const toLegacyDashboardPayload = async (env, status) => {
   return {
     checkedAt: status.checkedAt,
     hasHistory: Boolean(env.STATUS_KV),
-    services: { minecraft, queue, login, website, shop },
+    services: { minecraft, queue, website, shop },
     metrics,
   };
 };
@@ -302,12 +297,14 @@ export default {
       const validSnapshot = (snapshot) => snapshot &&
         ['checking', 'online', 'offline', 'unconfigured'].includes(snapshot.status) &&
         Number.isInteger(snapshot.players) && snapshot.players >= 0 && snapshot.players <= 100000;
-      if (!validSnapshot(payload?.main) || !validSnapshot(payload?.login)) {
+      const validQueueSnapshot = (snapshot) => snapshot &&
+        ['checking', 'online', 'offline', 'unconfigured'].includes(snapshot.status);
+      if (!validSnapshot(payload?.main) || !validQueueSnapshot(payload?.queue)) {
         return json({ error: 'invalid_status_payload' }, { status: 400 });
       }
       const snapshot = {
         main: { status: payload.main.status, players: payload.main.players },
-        login: { status: payload.login.status, players: payload.login.players },
+        queue: { status: payload.queue.status },
         receivedAt: new Date().toISOString(),
       };
       await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 120 });
