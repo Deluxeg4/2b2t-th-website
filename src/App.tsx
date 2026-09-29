@@ -4,9 +4,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, CheckCircle2, Bell, Activity, Menu, X } from 'lucide-react';
+import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Bell, Activity, Menu, X } from 'lucide-react';
 import { translations } from './translations';
 import logoImage from './assets/server-logo.png?url';
 
@@ -783,7 +783,7 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
   );
 }
 type ServiceStatus = {
-  id: 'minecraft' | 'queue' | 'website';
+  id: 'minecraft' | 'queue' | 'main-server' | 'website';
 };
 
 type LiveStatus = {
@@ -796,15 +796,20 @@ type LiveStatus = {
 const statusServices: ServiceStatus[] = [
   { id: 'minecraft' },
   { id: 'queue' },
+  { id: 'main-server' },
   { id: 'website' },
 ];
 const displayedServiceIds = new Set<ServiceStatus['id']>(statusServices.map((service) => service.id));
+const statusGroups = [
+  { id: 'minecraft', title: 'Minecraft', services: [{ id: 'main-server' }, { id: 'queue' }] },
+  { id: 'website', title: 'Website', services: [{ id: 'website' }] },
+] as const;
 
 function UptimeBars({ history, isThai }: { history: { ts: string; up: boolean | null }[]; isThai: boolean }) {
   const historyAvailable = history.some((item) => item.up !== null);
-  const bars = history.length ? history.slice(-90) : Array.from({ length: 90 }, () => ({ ts: '', up: null }));
+  const bars = history.length ? history.slice(-7) : Array.from({ length: 7 }, () => ({ ts: '', up: null }));
   return <div className="status-bars-wrap">
-    <div className="status-bars" role="img" aria-label={historyAvailable ? (isThai ? 'ประวัติ uptime 90 วัน' : '90 day uptime history') : (isThai ? 'ยังไม่มีประวัติ uptime' : 'No uptime history configured')}>
+    <div className="status-bars" role="img" aria-label={historyAvailable ? (isThai ? 'ประวัติ uptime 7 วัน' : '7 day uptime history') : (isThai ? 'ยังไม่มีประวัติ uptime' : 'No uptime history configured')}>
       {bars.map((item, index) => {
         const state = !historyAvailable || item.up === null ? 'unknown' : item.up ? 'up' : 'down';
         const date = item.ts ? new Date(item.ts).toLocaleDateString(isThai ? 'th-TH' : 'en-US') : '';
@@ -812,7 +817,7 @@ function UptimeBars({ history, isThai }: { history: { ts: string; up: boolean | 
         return <span key={index} className={`status-bar ${state}`} title={date ? `${date}: ${label}` : label} />;
       })}
     </div>
-    <div className="status-bars-labels"><span>{isThai ? '90 วันที่แล้ว' : '90 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
+    <div className="status-bars-labels"><span>{isThai ? '7 วันที่แล้ว' : '7 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
   </div>;
 }
 
@@ -820,23 +825,65 @@ type PlayerMetric = { ts: string; players: number };
 const metricRangeMs = { day: 24 * 60 * 60 * 1000, week: 7 * 24 * 60 * 60 * 1000, month: 30 * 24 * 60 * 60 * 1000 };
 
 function MetricsChart({ values, range, isThai }: { values: PlayerMetric[]; range: 'month' | 'week' | 'day'; isThai: boolean }) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const now = Date.now();
   const rangeMs = metricRangeMs[range];
   const cutoff = now - rangeMs;
   const visibleValues = values
     .filter((point) => Number.isFinite(Date.parse(point.ts)) && Date.parse(point.ts) >= cutoff && Date.parse(point.ts) <= now)
     .sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts));
-  const maxValue = Math.max(0, ...visibleValues.map((point) => point.players));
-  const step = Math.max(1, Math.ceil(maxValue / 4));
-  const axisMax = Math.max(step, Math.ceil(maxValue / step) * step);
-  const scaleValues = Array.from({ length: axisMax / step + 1 }, (_, index) => axisMax - index * step);
-  const gridY = (index: number) => 10 + (index / (scaleValues.length - 1)) * 98;
-  const points = visibleValues.map((point) => {
-    const x = ((Date.parse(point.ts) - cutoff) / rangeMs) * 900;
-    const y = 108 - Math.min(point.players / axisMax, 1) * 98;
-    return `${x},${y}`;
-  }).join(' ');
-  return <div className="metrics-chart" aria-label="Live player metrics chart"><div className="chart-scale">{scaleValues.map((value) => <span key={value}>{value}</span>)}</div>{visibleValues.length > 1 ? <svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img">{scaleValues.map((_, index) => <line key={index} x1="0" y1={gridY(index)} x2="900" y2={gridY(index)} className="chart-grid" />)}<polyline points={points} className="chart-line chart-line-primary" /></svg> : <div className="chart-no-data">{isThai ? 'กำลังสะสมข้อมูลจริง…' : 'Collecting live data…'}</div>}<div className="chart-labels"><span>{range === 'day' ? (isThai ? '24 ชั่วโมงก่อน' : '24 hours ago') : range === 'week' ? (isThai ? '7 วันก่อน' : '7 days ago') : (isThai ? '30 วันก่อน' : '30 days ago')}</span><span>{visibleValues.length > 1 ? `${visibleValues.length} ${isThai ? 'จุดข้อมูล' : 'samples'}` : ''}</span><span>{isThai ? 'ตอนนี้' : 'Now'}</span></div></div>;
+  const chartValues = visibleValues.length > 240
+    ? Array.from({ length: 240 }, (_, index) => visibleValues[Math.round(index * (visibleValues.length - 1) / 239)])
+    : visibleValues;
+  const minValue = chartValues.length ? Math.min(...chartValues.map((point) => point.players)) : 0;
+  const maxValue = Math.max(1, ...chartValues.map((point) => point.players));
+  const valueSpan = Math.max(50, maxValue - minValue);
+  const firstMetricTime = chartValues.length ? Date.parse(chartValues[0].ts) : cutoff;
+  const lastMetricTime = chartValues.length ? Date.parse(chartValues[chartValues.length - 1].ts) : now;
+  const metricTimeSpan = Math.max(1, lastMetricTime - firstMetricTime);
+  const pointCoords = chartValues.map((point) => ({
+    x: 12 + ((Date.parse(point.ts) - firstMetricTime) / metricTimeSpan) * 876,
+    y: 92 - ((point.players - (minValue + maxValue) / 2) / valueSpan) * 54,
+  }));
+  const linePath = pointCoords.reduce((path, point, index) => {
+    if (index === 0) return `M ${point.x} ${point.y}`;
+    const previous = pointCoords[index - 1];
+    const beforePrevious = pointCoords[Math.max(0, index - 2)];
+    const next = pointCoords[Math.min(pointCoords.length - 1, index + 1)];
+    const control1X = previous.x + (point.x - beforePrevious.x) / 6;
+    const control1Y = previous.y + (point.y - beforePrevious.y) / 6;
+    const control2X = point.x - (next.x - previous.x) / 6;
+    const control2Y = point.y - (next.y - previous.y) / 6;
+    return `${path} C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${point.x} ${point.y}`;
+  }, '');
+  const areaPath = pointCoords.length ? `${linePath} L ${pointCoords[pointCoords.length - 1].x} 166 L ${pointCoords[0].x} 166 Z` : '';
+  const hovered = hoveredIndex == null ? null : chartValues[hoveredIndex];
+  const hoverPoint = hoveredIndex == null ? null : pointCoords[hoveredIndex];
+  const timeLabel = hovered ? new Date(hovered.ts).toLocaleString(isThai ? 'th-TH' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+
+  const updateHover = (event: MouseEvent<SVGSVGElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (!bounds.width || !visibleValues.length) return;
+    const x = ((event.clientX - bounds.left) / bounds.width) * 900;
+    let nearest = 0;
+    for (let index = 1; index < pointCoords.length; index += 1) {
+      if (Math.abs(pointCoords[index].x - x) < Math.abs(pointCoords[nearest].x - x)) nearest = index;
+    }
+    setHoveredIndex(nearest);
+  };
+
+  return <div className="metrics-chart" aria-label={isThai ? 'กราฟจำนวนผู้เล่นออนไลน์' : 'Online player metrics chart'}>
+    {visibleValues.length > 1 ? <div className="chart-plot-wrap">
+      <svg className="chart-plot" viewBox="0 0 900 180" preserveAspectRatio="none" role="img" aria-label={isThai ? 'กราฟแสดงจำนวนผู้เล่นตามเวลา' : 'Player count over time'} onMouseMove={updateHover} onMouseLeave={() => setHoveredIndex(null)}>
+        <defs><linearGradient id="player-area-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#aeb5bf" stopOpacity=".2" /><stop offset="100%" stopColor="#aeb5bf" stopOpacity="0" /></linearGradient></defs>
+        <line x1="12" y1="166" x2="888" y2="166" className="chart-baseline" />
+        <path d={areaPath} className="chart-area" />
+        <path d={linePath} className="chart-line chart-line-muted" />
+        {hoverPoint && <><line x1={hoverPoint.x} y1="10" x2={hoverPoint.x} y2="166" className="chart-crosshair" /><circle cx={hoverPoint.x} cy={hoverPoint.y} r="4.5" className="chart-hover-point" /></>}
+      </svg>
+      {hovered && hoverPoint && <div className="chart-tooltip" style={{ left: `${Math.min(78, Math.max(5, hoverPoint.x / 9))}%`, top: `${Math.min(78, Math.max(12, hoverPoint.y / 1.8))}%` }}><time>{range === 'day' ? new Date(hovered.ts).toLocaleTimeString(isThai ? 'th-TH' : 'en-US', { hour: 'numeric', minute: '2-digit' }) : new Date(hovered.ts).toLocaleDateString(isThai ? 'th-TH' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</time><strong><i />{hovered.players.toLocaleString()} {isThai ? 'ผู้เล่น' : 'players'}</strong></div>}
+    </div> : <div className="chart-no-data">{isThai ? 'กำลังสะสมข้อมูลจริง…' : 'Collecting live data…'}</div>}
+  </div>;
 }
 
 async function fetchPublicMinecraftStatus() {
@@ -920,9 +967,11 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
   }, []);
   const minecraftMonitorFailed = Boolean(liveStatus && typeof liveStatus.services.minecraft?.latencyMs !== 'number' && liveStatus.services.minecraft?.source !== 'velocity');
   const serviceStatus = (id: ServiceStatus['id']) => {
-    const service = liveStatus?.services[id];
+    const statusId = id === 'main-server' ? 'minecraft' : id;
+    const service = liveStatus?.services[statusId];
     if (service?.configured === false) return null;
-    if (minecraftMonitorFailed && id === 'minecraft') return minecraftFallback?.up ?? null;
+    if (minecraftMonitorFailed && (id === 'minecraft' || id === 'main-server')) return minecraftFallback?.up ?? null;
+    if (minecraftMonitorFailed && id === 'main-server') return minecraftFallback?.up ?? null;
     if (minecraftMonitorFailed && id === 'queue' && service?.derived) return minecraftFallback?.up ?? null;
     return service?.up ?? null;
   };
@@ -954,9 +1003,19 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
     return up ? (isThai ? 'ปกติ' : 'Operational') : (isThai ? 'ออฟไลน์' : 'Offline');
   };
   const serviceName = (id: ServiceStatus['id']) => id === 'minecraft'
-    ? (isThai ? 'เซิร์ฟเวอร์หลัก' : 'Main server')
+    ? 'Minecraft'
     : id === 'queue' ? 'Queue'
+      : id === 'main-server' ? 'Main server'
         : isThai ? 'เว็บไซต์' : 'Website';
+  const serviceUptime = (id: ServiceStatus['id']) => {
+    const statusId = id === 'main-server' ? 'minecraft' : id;
+    const uptime = liveStatus?.services[statusId]?.uptime;
+    return uptime == null ? '—' : `${uptime.toFixed(1)}% uptime`;
+  };
+  const groupUptime = (id: 'minecraft' | 'website') => {
+    if (id === 'minecraft') return serviceUptime('minecraft');
+    return serviceUptime('website');
+  };
   const overallIcon = hasOfflineService ? <Activity size={22} /> : <CheckCircle2 size={22} />;
   const formattedCheckedAt = lastCheckedAt?.toLocaleTimeString(isThai ? 'th-TH' : 'en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   return <div className="status-page">
@@ -964,20 +1023,24 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
     <main className="status-container status-main">
       <div className="status-title-row"><h1>{isThai ? 'สถานะระบบ' : 'System status'}</h1><div className="status-last-checked"><span className="status-live-dot" /><span>{lastCheckedAt ? `${isThai ? 'ตรวจล่าสุด' : 'Last checked'} ${formattedCheckedAt}` : (isThai ? 'กำลังตรวจสอบ…' : 'Checking…')}</span></div></div>
       <div className={`status-overall ${serverOnline === false ? 'status-overall-down' : ''}`} aria-live="polite">{overallIcon}<span>{statusText}</span></div>
-      <section className="status-group" aria-label={isThai ? 'สถานะบริการ' : 'Service status'}>
-        <div className="status-table-head"><span>{isThai ? 'บริการ' : 'Service'}</span><span>{isThai ? 'สถานะ' : 'Status'}</span><span>{isThai ? 'ข้อมูลสด' : 'Live data'}</span><span>{isThai ? 'ประวัติการทำงาน' : 'Recent uptime'}</span></div>
-        {statusServices.map((service) => {
-          const live = serviceStatus(service.id);
-          const item = liveStatus?.services[service.id];
-          const monitorUnavailable = minecraftMonitorFailed && (service.id === 'minecraft' || (service.id === 'queue' && item?.derived));
-          const playerCount = service.id === 'minecraft' ? minecraftFallback?.players ?? item?.players : null;
-          const uptime = monitorUnavailable ? null : item?.uptime;
-          const history = monitorUnavailable ? [] : item?.history || [];
-          const detail = service.id === 'minecraft' && playerCount != null ? `${playerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page available') : uptime != null ? `${uptime}%` : '—';
-          return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars history={history} isThai={isThai} /></div>;
-        })}
+      <section className="status-groups" aria-label={isThai ? 'สถานะบริการ' : 'Service status'}>
+        {statusGroups.map((group) => <div className="status-group" key={group.id}>
+          <div className="status-group-heading"><span className="status-group-chevron"><ChevronDown size={14} /></span><strong>{group.title}</strong><span>{groupUptime(group.id)}</span></div>
+          <div className="status-group-services">{group.services.map(({ id }) => {
+            const live = serviceStatus(id);
+            const statusId = id === 'main-server' ? 'minecraft' : id;
+            const item = liveStatus?.services[statusId];
+            const monitorUnavailable = minecraftMonitorFailed && (id === 'main-server' || (id === 'queue' && item?.derived));
+            const history = monitorUnavailable ? [] : item?.history || [];
+            const stateClass = live === null ? 'is-unknown' : live ? 'is-up' : 'is-down';
+            return <article className="status-service" key={id}>
+              <div className="status-service-heading"><strong><span className={`status-service-icon ${stateClass}`}>{live === true ? <Check size={11} /> : live === false ? <X size={11} /> : null}</span>{serviceName(id)}</strong><span>{monitorUnavailable ? '—' : serviceUptime(id)}</span></div>
+              <UptimeBars history={history} isThai={isThai} />
+            </article>;
+          })}</div>
+        </div>)}
       </section>
-      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{isThai ? 'จำนวนผู้เล่นในเซิร์ฟเวอร์' : 'Players online'}</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'คน' : 'players'}`}</span></div><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['day', 'week', 'month'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? '30 วัน' : '30 days') : item === 'week' ? (isThai ? '7 วัน' : '7 days') : (isThai ? '24 ชั่วโมง' : '24 hours')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics || []} range={range} isThai={isThai} /></section>
+      <section className="status-panel metrics-panel"><div className="metrics-heading"><h2>{isThai ? 'ข้อมูลระบบ' : 'SYSTEM METRICS'}</h2><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['month', 'week', 'day'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? 'เดือน' : 'month') : item === 'week' ? (isThai ? 'สัปดาห์' : 'week') : (isThai ? 'วัน' : 'day')}</button>)}</div></div><div className="metrics-summary"><strong>2b2t-th</strong><span>{liveStatus?.services.minecraft?.players == null ? '—' : `~ ${liveStatus.services.minecraft.players.toLocaleString()} ${isThai ? 'ผู้เล่น' : 'players'}`}</span></div><MetricsChart values={liveStatus?.metrics || []} range={range} isThai={isThai} /></section>
       <section className="status-panel notices-panel"><h2>{isThai ? 'ประกาศล่าสุด' : 'Recent notices'}</h2><div className="notice-empty"><Bell size={24} /><p>{isThai ? 'ไม่มีประกาศในช่วง 7 วันที่ผ่านมา' : 'No notices reported for the past 7 days'}</p></div></section>
     </main>
     <footer className="status-container status-footer"><span>© 2026 2b2t-th</span></footer>

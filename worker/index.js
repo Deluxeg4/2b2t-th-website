@@ -4,6 +4,7 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
 });
 
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
+const SERVICE_HISTORY_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const MAX_SAMPLES = 90 * 24 * 12; // Five-minute samples for 90 days.
 const VELOCITY_STATUS_MAX_AGE_MS = 180 * 1000;
 const VELOCITY_STATUS_WRITE_INTERVAL_MS = 120 * 1000;
@@ -136,11 +137,11 @@ const currentStatus = async (env) => {
   };
 };
 
-const trimSamples = (samples, now = Date.now()) => samples
-  .filter((sample) => Date.parse(sample.ts || sample.timestamp) >= now - RETENTION_MS)
+const trimSamples = (samples, now = Date.now(), retentionMs = RETENTION_MS) => samples
+  .filter((sample) => Date.parse(sample.ts || sample.timestamp) >= now - retentionMs)
   .slice(-MAX_SAMPLES);
 
-const serviceHistoryKey = (serviceId) => serviceId === 'main-server' ? 'minecraft' : serviceId === 'minecraft' ? 'minecraft-group' : serviceId;
+const serviceHistoryKey = (serviceId) => `uptime-v2:${serviceId === 'main-server' ? 'minecraft' : serviceId === 'minecraft' ? 'minecraft-group' : serviceId}`;
 
 const recordIncidents = async (env, services, timestamp) => {
   if (!env.STATUS_KV) return;
@@ -163,7 +164,7 @@ const persistStatus = async (env, status) => {
   const timestamp = status.checkedAt;
   await Promise.all(status.services.map(async (service) => {
     if (service.configured === false) return;
-    const history = trimSamples(await readHistory(env, serviceHistoryKey(service.id)));
+    const history = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), Date.now(), SERVICE_HISTORY_RETENTION_MS);
     history.push({ ts: timestamp, status: service.status, up: service.up });
     await env.STATUS_KV.put(`history:${serviceHistoryKey(service.id)}`, JSON.stringify(history.slice(-MAX_SAMPLES)));
   }));
@@ -190,8 +191,8 @@ const dailyServiceHistory = (samples, now) => {
     else if (sampleStatus === 'degraded' || current.status === 'degraded') current.status = 'degraded';
     byDay.set(day, current);
   }
-  return Array.from({ length: 90 }, (_, index) => {
-    const day = new Date(now - (89 - index) * 86400000).toISOString().slice(0, 10);
+  return Array.from({ length: 7 }, (_, index) => {
+    const day = new Date(now - (6 - index) * 86400000).toISOString().slice(0, 10);
     return byDay.get(day) || { timestamp: `${day}T00:00:00.000Z`, status: 'unknown' };
   });
 };
@@ -199,7 +200,7 @@ const dailyServiceHistory = (samples, now) => {
 const toDashboardPayload = async (env, status) => {
   const now = Date.now();
   const services = await Promise.all(status.services.map(async (service) => {
-    const samples = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), now);
+    const samples = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), now, SERVICE_HISTORY_RETENTION_MS);
     const uptimePercent = samples.length
       ? Number(((samples.filter((item) => item.status === 'operational' || item.up === true).length / samples.length) * 100).toFixed(2))
       : null;
@@ -223,9 +224,9 @@ const toDashboardPayload = async (env, status) => {
 const toLegacyDashboardPayload = async (env, status) => {
   const serviceById = Object.fromEntries(status.services.map((service) => [service.id, service]));
   const now = Date.now();
-  const legacyService = async (serviceId, historyId = serviceId, extra = {}) => {
+  const legacyService = async (serviceId, extra = {}) => {
     const service = serviceById[serviceId];
-    const samples = trimSamples(await readHistory(env, historyId), now);
+    const samples = trimSamples(await readHistory(env, serviceHistoryKey(serviceId)), now, SERVICE_HISTORY_RETENTION_MS);
     const history = dailyServiceHistory(samples, now).map((sample) => ({
       ts: sample.timestamp,
       up: sample.status === 'operational' ? true : sample.status === 'outage' ? false : null,
@@ -244,7 +245,7 @@ const toLegacyDashboardPayload = async (env, status) => {
     };
   };
   const [minecraft, queue, website, shop] = await Promise.all([
-    legacyService('main-server', 'minecraft', {
+    legacyService('main-server', {
       players: status.playerCount.online,
       queuePlayers: serviceById.queue?.players ?? null,
     }),
