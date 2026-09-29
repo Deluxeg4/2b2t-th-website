@@ -62,4 +62,14 @@ The `STATUS_KV` binding must point to a namespace in the account used for deploy
 npx wrangler deploy
 ```
 
+### Velocity backend status
+
+The VelocityServerStatus plugin can push `main` and `login` snapshots to `POST /api/velocity-status`; the Worker stores the latest snapshot in `STATUS_KV` and serves it on the localized status page. Snapshots older than 30 seconds are ignored. The endpoint requires a Cloudflare Worker secret named `VELOCITY_STATUS_TOKEN`:
+
+```bash
+npx wrangler secret put VELOCITY_STATUS_TOKEN
+```
+
+Set the same token in Velocity's `plugins/velocityserverstatus/config.yml` under `push.bearer-token`, and set `push.endpoint` to `https://status.2b2t-th.org/api/velocity-status`. Keep that token private. Once the Worker and Velocity plugin are deployed, the status page shows the main and login backend state and player counts. Player count history continues to use the existing five-minute cron samples.
+
 The status source API returns service health only; the homepage's player count remains a separate Minecraft query and is not used to infer the official status-page health.
