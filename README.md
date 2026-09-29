@@ -48,7 +48,7 @@ No `.env` file or API key is required for this build.
 
 The localized status page is available at `/th/status` and `/en/status`. `GET /api/status` checks Minecraft with mcstatus.io and mcsrvstat.us, derives the queue count from the server response, and checks the website and optional shop health URLs. It returns current service status, player count, response-time and player metrics, 90-day uptime history, and incidents detected from status changes.
 
-`wrangler.jsonc` already binds `STATUS_KV` and schedules a check every five minutes. The cron stores five-minute service and metric samples; browser requests fetch current health but do not create extra history samples. Existing `history:minecraft`, `history:queue`, `history:website`, and `history:metrics` data is retained and reused. The uptime bar is bucketed by day from the samples in KV.
+`wrangler.jsonc` binds `STATUS_KV` and schedules a check once per hour to keep history writes within the Workers KV free write allowance. Browser requests fetch current health but do not create extra history samples. Existing `history:minecraft`, `history:queue`, `history:website`, and `history:metrics` data is retained and reused. The uptime bar is bucketed by day from the samples in KV.
 
 Configure these optional Worker variables in Cloudflare's Worker settings:
 
@@ -64,7 +64,7 @@ npx wrangler deploy
 
 ### Velocity backend status
 
-The VelocityServerStatus plugin checks the Velocity `main` and `login` backends, then pushes `{ main, queue }` to `POST /api/velocity-status`. The website labels the Velocity `login` backend as Queue and shows the player count from `main`. The Worker stores the latest snapshot in `STATUS_KV` and serves it on the localized status page. Snapshots older than 30 seconds are ignored. The endpoint requires a Cloudflare Worker secret named `VELOCITY_STATUS_TOKEN`:
+The VelocityServerStatus plugin checks the Velocity `main` and `login` backends, then pushes `{ main, queue }` to `POST /api/velocity-status`. The website labels the Velocity `login` backend as Queue and shows the player count from `main`. The plugin may push every five seconds, while the Worker stores at most one snapshot every two minutes to stay within the Workers KV free write allowance. Snapshots older than three minutes are ignored. The endpoint requires a Cloudflare Worker secret named `VELOCITY_STATUS_TOKEN`:
 
 ```bash
 npx wrangler secret put VELOCITY_STATUS_TOKEN

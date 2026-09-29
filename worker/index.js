@@ -5,7 +5,8 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
 
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
 const MAX_SAMPLES = 90 * 24 * 12; // Five-minute samples for 90 days.
-const VELOCITY_STATUS_MAX_AGE_MS = 30 * 1000;
+const VELOCITY_STATUS_MAX_AGE_MS = 180 * 1000;
+const VELOCITY_STATUS_WRITE_INTERVAL_MS = 120 * 1000;
 
 const readHistory = async (env, key) => {
   if (!env.STATUS_KV) return [];
@@ -14,7 +15,7 @@ const readHistory = async (env, key) => {
 
 const readVelocityStatus = async (env) => {
   if (!env.STATUS_KV) return null;
-  const snapshot = await env.STATUS_KV.get('velocity:latest', 'json');
+  const snapshot = await env.STATUS_KV.get('velocity:latest', 'json', { cacheTtl: 30 });
   const receivedAt = Date.parse(snapshot?.receivedAt);
   const age = Date.now() - receivedAt;
   if (!snapshot || !Number.isFinite(receivedAt) || age < 0 || age > VELOCITY_STATUS_MAX_AGE_MS) return null;
@@ -302,13 +303,18 @@ export default {
       if (!validSnapshot(payload?.main) || !validQueueSnapshot(payload?.queue)) {
         return json({ error: 'invalid_status_payload' }, { status: 400 });
       }
+      const previous = await env.STATUS_KV.get('velocity:latest', 'json', { cacheTtl: 30 });
+      const previousAt = Date.parse(previous?.receivedAt);
+      if (Number.isFinite(previousAt) && Date.now() - previousAt < VELOCITY_STATUS_WRITE_INTERVAL_MS) {
+        return json({ ok: true, stored: false }, { headers: { 'cache-control': 'no-store' } });
+      }
       const snapshot = {
         main: { status: payload.main.status, players: payload.main.players },
         queue: { status: payload.queue.status },
         receivedAt: new Date().toISOString(),
       };
-      await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 120 });
-      return json({ ok: true, receivedAt: snapshot.receivedAt }, { headers: { 'cache-control': 'no-store' } });
+      await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 240 });
+      return json({ ok: true, stored: true, receivedAt: snapshot.receivedAt }, { headers: { 'cache-control': 'no-store' } });
     }
 
     if (url.pathname === '/api/status') {
