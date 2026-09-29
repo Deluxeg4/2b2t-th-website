@@ -789,7 +789,7 @@ type ServiceStatus = {
 type LiveStatus = {
   checkedAt: string;
   hasHistory: boolean;
-  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; latencyMs?: number | null; source?: string | null; players?: number | null; derived?: boolean; history: { ts: string; up: boolean }[] }>;
+  services: Record<string, { configured: boolean; up: boolean | null; uptime: number | null; latencyMs?: number | null; source?: string | null; players?: number | null; derived?: boolean; history: { ts: string; up: boolean | null }[] }>;
   metrics: { ts: string; players: number }[];
 };
 
@@ -800,10 +800,20 @@ const statusServices: ServiceStatus[] = [
 ];
 const displayedServiceIds = new Set<ServiceStatus['id']>(statusServices.map((service) => service.id));
 
-function UptimeBars({ live, history }: { live: boolean | null; history: { ts: string; up: boolean }[] }) {
-  const historyAvailable = history.length > 0;
-  const bars = historyAvailable ? history.slice(-60) : Array.from({ length: 60 }, () => ({ up: false }));
-  return <div className="status-bars" aria-label={historyAvailable ? '90 day uptime history' : 'No uptime history configured'}>{bars.map((item, index) => <span key={index} className={`status-bar ${historyAvailable ? (item.up ? 'up' : 'down') : 'unknown'}`} />)}</div>;
+function UptimeBars({ history, isThai }: { history: { ts: string; up: boolean | null }[]; isThai: boolean }) {
+  const historyAvailable = history.some((item) => item.up !== null);
+  const bars = history.length ? history.slice(-90) : Array.from({ length: 90 }, () => ({ ts: '', up: null }));
+  return <div className="status-bars-wrap">
+    <div className="status-bars" role="img" aria-label={historyAvailable ? (isThai ? 'ประวัติ uptime 90 วัน' : '90 day uptime history') : (isThai ? 'ยังไม่มีประวัติ uptime' : 'No uptime history configured')}>
+      {bars.map((item, index) => {
+        const state = !historyAvailable || item.up === null ? 'unknown' : item.up ? 'up' : 'down';
+        const date = item.ts ? new Date(item.ts).toLocaleDateString(isThai ? 'th-TH' : 'en-US') : '';
+        const label = state === 'up' ? (isThai ? 'ออนไลน์' : 'Operational') : state === 'down' ? (isThai ? 'ออฟไลน์' : 'Outage') : (isThai ? 'ไม่มีข้อมูล' : 'No data');
+        return <span key={index} className={`status-bar ${state}`} title={date ? `${date}: ${label}` : label} />;
+      })}
+    </div>
+    <div className="status-bars-labels"><span>{isThai ? '90 วันที่แล้ว' : '90 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
+  </div>;
 }
 
 type PlayerMetric = { ts: string; players: number };
@@ -964,7 +974,7 @@ function StatusPage({ lang, onToggleLanguage }: { lang: 'en' | 'th'; onToggleLan
           const uptime = monitorUnavailable ? null : item?.uptime;
           const history = monitorUnavailable ? [] : item?.history || [];
           const detail = service.id === 'minecraft' && playerCount != null ? `${playerCount} ${isThai ? 'ผู้เล่น' : 'players'}` : service.id === 'website' ? (isThai ? 'หน้าเว็บโหลดได้' : 'Page available') : uptime != null ? `${uptime}%` : '—';
-          return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars live={live} history={history} /></div>;
+          return <div className="status-row" key={service.id}><strong>{serviceName(service.id)}</strong><span className={`status-operational ${live === null ? 'is-unknown' : live ? 'is-up' : 'is-down'} ${item?.configured === false ? 'not-configured' : ''}`}><i />{serviceLabel(service.id)}</span><span className="status-uptime">{detail}</span><UptimeBars history={history} isThai={isThai} /></div>;
         })}
       </section>
       <section className="status-panel metrics-panel"><div className="panel-title"><h2>{isThai ? 'จำนวนผู้เล่นในเซิร์ฟเวอร์' : 'Players online'}</h2><span><Activity size={16} /> {liveStatus?.services.minecraft?.players == null ? '—' : `${liveStatus.services.minecraft.players} ${isThai ? 'คน' : 'players'}`}</span></div><div className="range-tabs" role="tablist" aria-label={isThai ? 'ช่วงเวลาของกราฟ' : 'Chart time range'}>{(['day', 'week', 'month'] as const).map((item) => <button type="button" role="tab" aria-selected={range === item} key={item} className={range === item ? 'selected' : ''} onClick={() => setRange(item)}>{item === 'month' ? (isThai ? '30 วัน' : '30 days') : item === 'week' ? (isThai ? '7 วัน' : '7 days') : (isThai ? '24 ชั่วโมง' : '24 hours')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{isThai ? 'ผู้เล่นออนไลน์ (ข้อมูลจริง)' : 'Online players (live data)'}</div><MetricsChart values={liveStatus?.metrics || []} range={range} isThai={isThai} /></section>

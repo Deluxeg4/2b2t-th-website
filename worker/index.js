@@ -225,9 +225,13 @@ const toLegacyDashboardPayload = async (env, status) => {
   const now = Date.now();
   const legacyService = async (serviceId, historyId = serviceId, extra = {}) => {
     const service = serviceById[serviceId];
-    const history = trimSamples(await readHistory(env, historyId), now).slice(-90);
-    const uptime = history.length
-      ? Number(((history.filter((sample) => sample.up === true).length / history.length) * 100).toFixed(2))
+    const samples = trimSamples(await readHistory(env, historyId), now);
+    const history = dailyServiceHistory(samples, now).map((sample) => ({
+      ts: sample.timestamp,
+      up: sample.status === 'operational' ? true : sample.status === 'outage' ? false : null,
+    }));
+    const uptime = samples.length
+      ? Number(((samples.filter((sample) => sample.up === true).length / samples.length) * 100).toFixed(2))
       : null;
     return {
       configured: service?.configured !== false,
