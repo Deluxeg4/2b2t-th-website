@@ -19,7 +19,7 @@ export const translations = {
       loading: "Loading updates...",
       noUpdates: "No updates found.",
       title: "2b2t - thailand",
-      description: "2b2t Thailand is a Minecraft anarchy server inspired by the original 2b2t experience, opened in 2026 for players who want true survival chaos without long queue times. Explore a persistent world with no rules, no resets, PvP enabled, and complete freedom all without requiring a premium Minecraft account.",
+      description: "2b2t Thailand or 2b2t-th.org is a Minecraft anarchy server inspired by the original 2b2t experience, opened in 2026 for players who want true survival chaos without long queue times. Explore a persistent world with no rules, no resets, PvP enabled, and complete freedom all without requiring a premium Minecraft account. You can also join from the Bedrock platform using the same IP address.",
       playingNow: "playing now",
       copyIp: "2b2t-th.org",
       copied: "Copied!",
@@ -34,34 +34,43 @@ export const translations = {
     },
     modifications: {
       title: "Modifications",
-      lastEdit: "Edit May 6, 2026",
       softwareDesc: "The server operates on its own custom server software that allows for hundreds of players at once on the same world. It has taken significant time and effort to develop and you may read more about it ",
       here: "here",
       gamemodeDesc: "The server is based on the survival gamemode, set to the hard difficulty. There are however many changes to improve server performance and gameplay. These are listed below.",
       features: [
+        {
+          title: "World generation",
+          desc: "The world uses a modified vanilla terrain generator, to prevent players from generating their own copy of the world."
+        },
+        {
+          title: "Player spawning",
+          desc: "Players spawn within a distance of 500 blocks from the 0, 0 center of the world. The spawn mechanic has been changed to allow for more variety for where a player spawns."
+        },
+        {
+          title: "Anticheat",
+          desc: "Players are allowed to use cheats and modifications in the server. However, the server may not allow full functionality of your cheats. This is mainly to prevent harmful movement cheats. You can read more about it ",
+          link: "grim"
+        },
+        {
+          title: "PvP",
+          desc: "The server will hide information about a players health and equipped items status, so that this can no longer be retrieved by cheats."
+        },
+        {
+          title: "Nether dimension roof and voids",
+          desc: "Access to the Nether roof and void areas in the Overworld and Nether is restricted. Players are also prevented from going above Y=500."
+        },
+        {
+          title: "Chat",
+          desc: "The chat has a few additions that can be viewed",
+          link: "commands"
+        },
         {
           title: "Death messages",
           desc: "The server has customized death message texts."
         },
         {
           title: "Phantoms",
-          desc: "Phantoms will not spawn in the overworld."
-        },
-        {
-          title: "Player spawning",
-          desc: "Players spawn within a distance of 300 blocks from the 0, 0 center of the world. The spawn mechanic has been changed to allow for more variety for where a player spawns."
-        },
-        {
-          title: "World generation",
-          desc: "The world uses a modified vanilla terrain generator, to prevent players from generating their own copy of the world."
-        },
-        {
-          title: "Anticheat",
-          desc: "Cheats and modded clients are completely allowed. We only restrict exploits that maliciously harm the server (e.g., lag machines or broken movement hacks)."
-        },
-        {
-          title: "Mechanics & Exploits",
-          desc: "Classic anarchy exploits remain enabled. TNT duplication, Attribute Swapping, and Remote Stasis Chambers are preserved for technical players."
+          desc: "Phantoms will not spawn in the overworld. They will only spawn in the end dimension, but will not be hostile unless attacked. Phantoms spawn above endstone or chorus tree blocks. Phantoms screech sounds are disabled until they are attacked."
         }
       ]
     },
@@ -98,14 +107,17 @@ export const translations = {
         deathPermanent: "This will toggle the visibility of death messages permanently, saved when disconnecting from the server."
       },
       misc: {
-        title: "Miscellaneous",
-        kill: "Instantly kills your player."
+        title: "Other",
+        kill: "Type /kill once, then type it again to confirm."
       }
     },
     terms: {
       title: "Terms",
+      gameplayTitle: "Gameplay style",
       gameplay: "The server hosts the survival gamemode as provided by Mojang, an open ended sandbox, in which there are no inherent rules related to gameplay elements like PvP and griefing. This enables a chaotic and harsh world where players can fight and destroy whoever and whatever they wish if they choose.",
+      conductTitle: "Conduct outside the game",
       conduct: "However, it does not in any way invite or incite players to be toxic or harassing beyond the game.",
+      fairPlayTitle: "Fair play and server stability",
       fairPlay: "Do not attempt to undermine the server's efforts to provide every player an equal and fair playing environment, through means such as abusing any exploit, bug or flawed game mechanic to cause server disruption or lag.",
       communityTitle: "Chat and community guidelines",
       content: "Do not create builds, structures, or any other content relating to harmful ideas, hateful symbols, or hateful speech.",
@@ -117,7 +129,7 @@ export const translations = {
     },
     about: {
       title: "About",
-      desc1: "2b2t Thailand is a Minecraft anarchy server officially opened on April 10, 2026, where players are free to build, explore, farm, fight, survive, and shape the world in their own way.",
+      desc1: "2b2t or 2b2t-th.org Thailand is a Minecraft anarchy server officially opened on April 10, 2026, where players are free to build, explore, farm, fight, survive, and shape the world in their own way. You can also join from the Bedrock platform using the same IP address.",
       desc2: "The server is inspired by 2b2t, the long-running Minecraft server that has been online since 2010 and is known for its deep, chaotic, and complex player-driven history.",
       desc3: "Our goal is to give Thai players a similar anarchy experience with lower ping, no long queue, support for offline/cracked accounts, and crossplay between Java Edition and Bedrock Edition. The server is hosted in Thailand, open 24/7, and operated without a profit-focused purpose."
     }
@@ -142,7 +154,7 @@ export const translations = {
       loading: "กำลังโหลดการอัปเดต...",
       noUpdates: "ไม่พบการอัปเดต",
       title: "2b2t - ประเทศไทย",
-      description: "2b2t Thailand คือเซิร์ฟเวอร์ Minecraft แนว Anarchy ที่ได้รับแรงบันดาลใจจากประสบการณ์ดั้งเดิมของ 2b2t เปิดให้บริการในปี 2026 สำหรับผู้เล่นที่ต้องการความวุ่นวายในการเอาชีวิตรอดที่แท้จริงโดยไม่ต้องรอคิวนาน สำรวจโลกที่คงอยู่ตลอดไปโดยไม่มีกฎเกณฑ์ ไม่มีการรีเซ็ต เปิด PvP และมีอิสระอย่างเต็มที่ โดยไม่จำเป็นต้องใช้ไอดีแท้",
+      description: "2b2t Thailand หรือ 2b2t-th.org คือเซิร์ฟเวอร์ Minecraft แนว Anarchy ที่ได้รับแรงบันดาลใจจากประสบการณ์ดั้งเดิมของ 2b2t เปิดให้บริการในปี 2026 สำหรับผู้เล่นที่ต้องการความวุ่นวายในการเอาชีวิตรอดที่แท้จริงโดยไม่ต้องรอคิวนาน สำรวจโลกที่คงอยู่ตลอดไปโดยไม่มีกฎเกณฑ์ ไม่มีการรีเซ็ต เปิด PvP และมีอิสระอย่างเต็มที่ โดยไม่จำเป็นต้องใช้ไอดีแท้ และยังสามารถเข้าเล่นผ่านแพลตฟอร์ม Bedrock โดยใช้ IP เดียวกันได้",
       playingNow: "กำลังเล่นอยู่",
       copyIp: "2b2t-th.org",
       copied: "คัดลอกแล้ว!",
@@ -157,34 +169,43 @@ export const translations = {
     },
     modifications: {
       title: "การปรับแต่ง",
-      lastEdit: "แก้ไขเมื่อ 6 พฤษภาคม 2026",
       softwareDesc: "เซิร์ฟเวอร์ทำงานบนซอฟต์แวร์เซิร์ฟเวอร์ที่ปรับแต่งเอง ซึ่งช่วยให้รองรับผู้เล่นได้หลายร้อยคนพร้อมกันในโลกเดียว เราใช้เวลาและความพยายามอย่างมากในการพัฒนา และคุณสามารถอ่านเพิ่มเติมเกี่ยวกับเรื่องนี้ได้",
       here: "ที่นี่",
       gamemodeDesc: "เซิร์ฟเวอร์ใช้โหมดการเล่นแบบเอาชีวิตรอด (Survival) ตั้งค่าความยากระดับยาก (Hard) อย่างไรก็ตาม มีการเปลี่ยนแปลงหลายอย่างเพื่อเพิ่มประสิทธิภาพของเซิร์ฟเวอร์และระบบการเล่น ซึ่งมีรายละเอียดดังนี้",
       features: [
         {
-          title: "ข้อความการตาย",
-          desc: "เซิร์ฟเวอร์มีข้อความการตายที่ถูกปรับแต่งใหม่"
-        },
-        {
-          title: "แฟนทอม (Phantoms)",
-          desc: "แฟนทอมจะไม่เกิดในโลกปกติ (Overworld)"
+          title: "การสร้างโลก",
+          desc: "โลกใช้ตัวสร้างภูมิประเทศแบบวานิลลาที่ปรับแต่ง เพื่อป้องกันไม่ให้ผู้เล่นสร้างสำเนาโลกของตนเอง"
         },
         {
           title: "การเกิดของผู้เล่น",
-          desc: "ผู้เล่นจะเกิดในระยะ 300 บล็อกจากจุดศูนย์กลาง 0, 0 ของโลก ระบบการเกิดได้ถูกเปลี่ยนเพื่อให้มีความหลากหลายในจุดเกิดมากขึ้น"
-        },
-        {
-          title: "การสร้างโลก",
-          desc: "โลกใช้ระบบสร้างภูมิประเทศ Vanilla แบบปรับแต่ง เพื่อป้องกันไม่ให้ผู้เล่นสามารถจำลอง (Copy) โลกไปไว้ในเครื่องตัวเองได้"
+          desc: "ผู้เล่นจะเกิดภายในระยะ 500 บล็อกจากจุดศูนย์กลางโลก (0, 0) ระบบเกิดถูกปรับเพื่อให้ตำแหน่งเกิดมีความหลากหลายมากขึ้น"
         },
         {
           title: "ระบบป้องกันการโกง",
-          desc: "อนุญาตให้ใช้โปรแกรมโกงและม็อดตัวเกมได้อย่างเต็มที่ เราจำกัดเฉพาะช่องโหว่ (Exploits) ที่ส่งผลเสียต่อเซิร์ฟเวอร์อย่างร้ายแรงเท่านั้น (เช่น เครื่องสร้างความแลค หรือการแฮ็กการเคลื่อนที่ที่ทำให้ระบบพัง)"
+          desc: "ผู้เล่นสามารถใช้โปรแกรมโกงและไคลเอนต์ดัดแปลงบนเซิร์ฟเวอร์ได้ อย่างไรก็ตาม โปรแกรมโกงบางอย่างอาจใช้งานได้ไม่ครบทุกฟังก์ชัน โดยมีข้อจำกัดหลักเพื่อป้องกันการโกงการเคลื่อนที่ที่เป็นอันตราย สามารถอ่านเพิ่มเติมเกี่ยวกับเรื่องนี้ได้",
+          link: "grim"
         },
         {
-          title: "ระบบและช่องโหว่",
-          desc: "ช่องโหว่แนว Anarchy แบบคลาสสิกยังคงใช้งานได้ การปั๊ม TNT, Attribute Swapping และ Remote Stasis Chambers ยังคงมีอยู่สำหรับผู้เล่นสายเทคนิค"
+          title: "PvP",
+          desc: "เซิร์ฟเวอร์ซ่อนข้อมูลพลังชีวิตและสถานะอุปกรณ์ที่ผู้เล่นสวมใส่ เพื่อไม่ให้โปรแกรมโกงดึงข้อมูลเหล่านี้ได้"
+        },
+        {
+          title: "หลังคามิติ Nether และพื้นที่ Void",
+          desc: "จำกัดไม่ให้ผู้เล่นขึ้นไปบนหลังคามิติ Nether หรือเข้าถึงพื้นที่ Void ในโลก Overworld และ Nether รวมถึงไม่ให้ขึ้นไปสูงกว่า Y=500"
+        },
+        {
+          title: "แชท",
+          desc: "แชทมีส่วนเพิ่มเติมบางอย่าง สามารถดูรายละเอียดได้",
+          link: "commands"
+        },
+        {
+          title: "ข้อความการตาย",
+          desc: "เซิร์ฟเวอร์มีข้อความการตายที่ปรับแต่งไว้"
+        },
+        {
+          title: "แฟนทอม (Phantoms)",
+          desc: "แฟนทอมจะไม่เกิดในโลก Overworld แต่จะเกิดได้เฉพาะในมิติ End และจะไม่โจมตีผู้เล่นจนกว่าจะถูกโจมตีก่อน แฟนทอมจะเกิดเหนือบล็อก End Stone หรือ Chorus Tree และเสียงกรีดร้องจะไม่ดังจนกว่าจะถูกโจมตี"
         }
       ]
     },
@@ -221,15 +242,18 @@ export const translations = {
         deathPermanent: "คำสั่งนี้จะสลับการแสดงข้อความการตายอย่างถาวร และบันทึกการตั้งค่าไว้เมื่อออกจากเซิร์ฟเวอร์"
       },
       misc: {
-        title: "เบ็ดเตล็ด",
-        kill: "ทำให้ตัวละครของคุณตายทันที"
+        title: "อื่นๆ",
+        kill: "เมื่อพิมพ์คำสั่ง /kill ครั้งแรก ให้พิมพ์คำสั่งเดิมอีกครั้งเพื่อยืนยัน"
       }
     },
     terms: {
       title: "ข้อกำหนดการใช้งาน",
-      gameplay: "เซิร์ฟเวอร์ใช้โหมดเอาชีวิตรอดตามรูปแบบที่ Mojang จัดทำไว้ ซึ่งเป็นแซนด์บ็อกซ์แบบเปิดกว้างและไม่มีกฎที่กำหนดไว้กับองค์ประกอบการเล่น เช่น PvP และการทำลายสิ่งปลูกสร้าง จึงทำให้โลกมีความวุ่นวายและท้าทาย ผู้เล่นสามารถต่อสู้และทำลายผู้เล่นหรือสิ่งต่างๆ ได้ตามที่ต้องการ",
-      conduct: "อย่างไรก็ตาม นี่ไม่ได้เป็นการเชื้อเชิญหรือส่งเสริมให้ผู้เล่นแสดงพฤติกรรมเป็นพิษหรือคุกคามกันนอกเหนือจากภายในเกม",
-      fairPlay: "ห้ามบ่อนทำลายความพยายามของเซิร์ฟเวอร์ในการจัดสภาพแวดล้อมการเล่นที่เท่าเทียมและเป็นธรรมสำหรับผู้เล่นทุกคน เช่น การใช้ประโยชน์จากช่องโหว่ บั๊ก หรือกลไกของเกมที่ผิดพลาดเพื่อทำให้เซิร์ฟเวอร์ขัดข้องหรือเกิดอาการแลค",
+      gameplayTitle: "รูปแบบการเล่น",
+      gameplay: "เซิร์ฟเวอร์ใช้โหมดเอาชีวิตรอดตามรูปแบบของ Mojang ซึ่งเป็นแซนด์บ็อกซ์แบบเปิดกว้าง โดยไม่มีข้อจำกัดด้านรูปแบบการเล่น เช่น PvP หรือการทำลายสิ่งปลูกสร้าง โลกจึงเต็มไปด้วยความวุ่นวายและความท้าทาย ผู้เล่นสามารถต่อสู้กับผู้เล่นคนอื่นหรือทำลายสิ่งต่าง ๆ ภายในเกมได้อย่างอิสระ",
+      conductTitle: "พฤติกรรมนอกเกม",
+      conduct: "อย่างไรก็ตาม อิสระในการเล่นภายในเกมไม่ได้หมายความว่าเซิร์ฟเวอร์สนับสนุนให้ผู้เล่นคุกคามหรือแสดงพฤติกรรมเป็นพิษต่อกันนอกเกม",
+      fairPlayTitle: "การเล่นอย่างเป็นธรรมและเสถียรภาพของเซิร์ฟเวอร์",
+      fairPlay: "ห้ามกระทำการที่บ่อนทำลายความพยายามของเซิร์ฟเวอร์ในการรักษาสภาพแวดล้อมที่เท่าเทียมและเป็นธรรมสำหรับผู้เล่นทุกคน เช่น ใช้ช่องโหว่ บั๊ก หรือกลไกของเกมที่ทำงานผิดพลาด เพื่อทำให้เซิร์ฟเวอร์ขัดข้องหรือเกิดอาการแลค",
       communityTitle: "แนวทางการใช้แชทและชุมชน",
       content: "ห้ามสร้างสิ่งปลูกสร้าง โครงสร้าง หรือเนื้อหาอื่นใดที่เกี่ยวข้องกับแนวคิดที่เป็นอันตราย สัญลักษณ์แสดงความเกลียดชัง หรือถ้อยคำแสดงความเกลียดชัง",
       punishmentsTitle: "บทลงโทษ",
@@ -240,7 +264,7 @@ export const translations = {
     },
     about: {
       title: "เกี่ยวกับ",
-      desc1: "2b2t Thailand คือเซิร์ฟเวอร์ Minecraft แนว Anarchy หรือเซิร์ฟเวอร์ไร้กฎ เปิดให้บริการอย่างเป็นทางการเมื่อวันที่ 10 เมษายน 2026 ผู้เล่นสามารถเลือกใช้ชีวิตในโลกได้อย่างอิสระ ไม่ว่าจะเป็นการสร้างบ้าน สำรวจโลก ทำฟาร์ม ต่อสู้ PvP หรือเอาตัวรอดในแบบของตัวเอง",
+      desc1: "2b2t Thailand หรือ 2b2t-th.org คือเซิร์ฟเวอร์ Minecraft แนว Anarchy หรือเซิร์ฟเวอร์ไร้กฎ เปิดให้บริการอย่างเป็นทางการเมื่อวันที่ 10 เมษายน 2026 ผู้เล่นสามารถเลือกใช้ชีวิตในโลกได้อย่างอิสระ ไม่ว่าจะเป็นการสร้างบ้าน สำรวจโลก ทำฟาร์ม ต่อสู้ PvP หรือเอาตัวรอดในแบบของตัวเอง และยังสามารถเข้าเล่นผ่านแพลตฟอร์ม Bedrock โดยใช้ IP เดียวกันได้",
       desc2: "เซิร์ฟเวอร์นี้ได้รับแรงบันดาลใจจาก 2b2t ซึ่งเปิดให้บริการมาตั้งแต่ปี 2010 และเป็นที่รู้จักจากประวัติศาสตร์อันยาวนาน ซับซ้อน และเต็มไปด้วยเรื่องราวที่เกิดจากผู้เล่น",
       desc3: "เป้าหมายของเราคือให้ผู้เล่นชาวไทยได้สัมผัสประสบการณ์แนวเดียวกัน โดยไม่ต้องกังวลเรื่องการใช้ไอดีแท้ การรอคิวนาน หรือปัญหา Network Ping เซิร์ฟเวอร์เปิดให้บริการในประเทศไทยแบบ 24/7 เพื่อให้ได้ค่า Ping ที่ต่ำและเสถียร รองรับทั้ง Java Edition และ Bedrock Edition และเปิดให้บริการโดยไม่มีจุดประสงค์ในการแสวงหาผลกำไร"
     }
