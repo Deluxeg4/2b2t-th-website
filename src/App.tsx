@@ -117,10 +117,10 @@ function GameplayCarousel() {
   );
 }
 
-function ServerInfoCard({ lang, playerCount, handleCopyIp, copied }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean }) {
+function ServerInfoCard({ lang, playerCount, handleCopyIp, copied, isPrimaryHeading = false }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean, isPrimaryHeading?: boolean }) {
   const t = translations[lang].home;
   const descriptionParts = t.description.split('2b2t-th.org');
-  const HeadingTag = 'h1';
+  const HeadingTag = isPrimaryHeading ? 'h1' : 'h2';
   return (
     <div className="w-full rounded-sm bg-[#454545] p-5 text-left text-white shadow-lg sm:p-8">
       <div className="flex flex-col gap-5">
@@ -168,7 +168,7 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="lg:hidden">
-        <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} />
+        <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} isPrimaryHeading />
       </div>
       <div className="flex w-full flex-col gap-4 lg:flex-row">
       {/* Left Side Area */}
