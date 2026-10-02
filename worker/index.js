@@ -276,6 +276,15 @@ export default {
     const url = new URL(request.url);
     const host = url.hostname.toLowerCase();
 
+    if (host === 'discord.2b2t-th.org') {
+      return Response.redirect('https://dsc.gg/2b2t-th', 302);
+    }
+
+    if (host === 'status.2b2t-th.org' && (url.pathname === '/' || url.pathname === '/index.html')) {
+      const statusAssetUrl = new URL('/status/index.html', url);
+      return env.ASSETS.fetch(new Request(statusAssetUrl, request));
+    }
+
     const shouldRedirectToRoot =
       host !== '2b2t-th.org' && host !== 'www.2b2t-th.org' && host !== 'status.2b2t-th.org' && host.endsWith('.2b2t-th.org');
 

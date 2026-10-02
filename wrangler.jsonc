@@ -18,6 +18,10 @@
 		{
 			"pattern": "status.2b2t-th.org/*",
 			"zone_name": "2b2t-th.org"
+		},
+		{
+			"pattern": "discord.2b2t-th.org/*",
+			"zone_name": "2b2t-th.org"
 		}
 	],
 	"assets": {

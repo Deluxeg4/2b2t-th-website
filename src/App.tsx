@@ -10,6 +10,7 @@ import { Users, Copy, Check, MessageSquare, Globe, ChevronLeft, ChevronRight, Ac
 import StatusPage from './StatusPage';
 import { translations } from './translations';
 import logoImage from './assets/server-logo.png?url';
+import { getSeoMetadata } from './seo';
 
 const gameplayImages = Object.values(
   import.meta.glob('../gameplay/*.{png,jpg,jpeg,webp}', {
@@ -116,10 +117,10 @@ function GameplayCarousel() {
   );
 }
 
-function ServerInfoCard({ lang, playerCount, handleCopyIp, copied, isPrimaryHeading = false }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean, isPrimaryHeading?: boolean }) {
+function ServerInfoCard({ lang, playerCount, handleCopyIp, copied }: { lang: 'en' | 'th', playerCount: number | string, handleCopyIp: () => void, copied: boolean }) {
   const t = translations[lang].home;
   const descriptionParts = t.description.split('2b2t-th.org');
-  const HeadingTag = isPrimaryHeading ? 'h1' : 'h2';
+  const HeadingTag = 'h1';
   return (
     <div className="w-full rounded-sm bg-[#454545] p-5 text-left text-white shadow-lg sm:p-8">
       <div className="flex flex-col gap-5">
@@ -167,7 +168,7 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="lg:hidden">
-        <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} isPrimaryHeading />
+        <ServerInfoCard lang={lang} playerCount={playerCount} handleCopyIp={handleCopyIp} copied={copied} />
       </div>
       <div className="flex w-full flex-col gap-4 lg:flex-row">
       {/* Left Side Area */}
@@ -209,6 +210,7 @@ function Home({ lang, playerCount, handleCopyIp, copied, updates, loadingUpdates
           <div className="w-full min-h-[440px] bg-[#36393f] rounded-sm border border-[#2c2f33] overflow-hidden">
             <iframe
               src="https://canary.discord.com/widget?id=1348603803162640414&theme=dark"
+              title={lang === 'th' ? 'ชุมชน Discord ของ 2b2t Thailand' : '2b2t Thailand Discord community'}
               width="100%"
               height="440"
               className="discord-widget-frame"
@@ -228,7 +230,7 @@ function Updates({ lang, updates, loadingUpdates }: { lang: 'en' | 'th', updates
   const t = translations[lang].updates;
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h1>
       <p className="text-gray-400 text-sm mt-2 mb-6 border-b border-[#555] pb-4">{t.logTitle}</p>
       <div className="flex flex-col gap-4 text-gray-300 text-[15px]">
         {loadingUpdates ? (
@@ -256,7 +258,7 @@ function Modifications({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].modifications;
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h1>
       <div className="mt-4 mb-6 border-b border-[#555]" />
       <div className="text-gray-300 text-[17px] leading-relaxed">
         <p>
@@ -287,7 +289,7 @@ function Commands({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].commands;
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h1>
       <div className="mt-4 mb-6 border-b border-[#555]" />
       <div className="text-gray-300 text-[15px] leading-relaxed">
         <p className="mb-7 text-[17px]">{t.desc}</p>
@@ -362,7 +364,7 @@ function Terms({ lang }: { lang: 'en' | 'th' }) {
   const t = translations[lang].terms;
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h1>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6 mt-6">
         <div className="bg-[#353535] p-6 rounded-sm border border-[#555]">
           <h3 className="text-xl font-bold text-white mb-3">{t.gameplayTitle}</h3>
@@ -404,7 +406,7 @@ function About({ lang, handleCopyIp, copied }: { lang: 'en' | 'th'; handleCopyIp
   const descriptionParts = t.desc1.split('2b2t-th.org');
   return (
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h2>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">{t.title}</h1>
       <div className="text-gray-300 text-[17px] leading-relaxed flex flex-col gap-6 mt-6">
         <p>
           {descriptionParts[0]}
@@ -491,7 +493,7 @@ Be part of the growing Thai Minecraft community!`;
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
       <div className="flex flex-col gap-2 border-b border-[#555] pb-5">
         <span className="text-sm font-bold uppercase tracking-wide text-[#f5c542]">Partner</span>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">Server Partner</h2>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide">Server Partner</h1>
         <p className="text-gray-400 text-sm">
           {isThai ? 'พาร์ทเนอร์และประกาศความร่วมมือของ 2B2T Thailand' : 'Partner and collaboration announcements for 2B2T Thailand'}
         </p>
@@ -642,7 +644,7 @@ function Contact({ lang }: { lang: 'en' | 'th' }) {
     <div className="w-full bg-[#454545] rounded-sm shadow-lg p-5 sm:p-8 md:p-12 text-white text-left min-h-[360px] md:min-h-[500px]">
       <div className="border-b border-[#555] pb-5">
         <span className="text-sm font-bold uppercase tracking-wide text-[#f5c542]">Support</span>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide mt-2">2b2t-th Support</h2>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide mt-2">2b2t-th Support</h1>
         <p className="text-gray-400 text-sm mt-2">
           {isThai
             ? 'ช่องทางติดต่อทีมงานสำหรับปัญหาเกี่ยวกับเซิร์ฟเวอร์ การเข้าเล่น และการสนับสนุน'
@@ -812,6 +814,17 @@ export default function App() {
     : pathLang ? `/${pathSegments.slice(1).join('/')}` : location.pathname;
   const isThai = lang === 'th';
   const statusLabel = isThai ? 'สถานะระบบ' : 'Status';
+  const seo = getSeoMetadata(localizedPath, lang, isStatusHost);
+
+  useEffect(() => {
+    document.title = seo.title;
+
+    const description = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (description) description.content = seo.description;
+
+    const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (canonical) canonical.href = seo.canonical;
+  }, [seo.title, seo.description, seo.canonical]);
 
   useEffect(() => {
     const fetchServerStatus = async () => {
