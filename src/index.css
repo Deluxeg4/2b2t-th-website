@@ -55,6 +55,8 @@
 .status-operational i { display: block; width: 9px; height: 9px; border-radius: 50%; background: #19bd70; }
 .status-uptime { color: #344054; font-variant-numeric: tabular-nums; }
 .status-bars { display: flex; align-items: center; gap: 3px; height: 25px; }
+.status-bars-wrap { min-width: 0; }
+.status-bars-labels { display: flex; justify-content: space-between; margin-top: 5px; color: #64748b; font-size: 10px; }
 .status-history-block { padding: 14px 18px 16px; background: #fbfcfd; border-top: 1px solid #e5e7eb; }
 .status-history-title { margin-bottom: 10px; color: #64748b; font-size: 11px; font-weight: 600; }
 .status-history-line { display: grid; grid-template-columns: minmax(140px, .55fr) 1.45fr; align-items: center; gap: 18px; min-height: 27px; color: #64748b; font-size: 12px; }
@@ -86,6 +88,9 @@
 .chart-line { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
 .chart-line-primary { stroke: #20a66a; }
 .chart-line-muted { stroke: #8b8b8b; stroke-width: 2; }
+.chart-crosshair { stroke: #9ca3af; stroke-width: 1; stroke-dasharray: 4 4; }
+.chart-hover-point { fill: #fff; stroke: #20a66a; stroke-width: 2; }
+.chart-hover-label { fill: #344054; font-size: 12px; font-weight: 600; }
 .chart-scale { position: absolute; left: 10px; top: 10px; bottom: 31px; display: flex; flex-direction: column; justify-content: space-between; color: #6b7280; font-size: 10px; }
 .chart-labels { display: flex; justify-content: space-between; color: #6b7280; font-size: 10px; }
 .chart-no-data { height: 120px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 12px; border-bottom: 1px dashed #e5e7eb; }

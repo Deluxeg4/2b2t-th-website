@@ -4,8 +4,10 @@ const json = (data, init = {}) => new Response(JSON.stringify(data), {
 });
 
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
+const SERVICE_HISTORY_RETENTION_MS = 7 * 24 * 60 * 60 * 1000;
 const MAX_SAMPLES = 90 * 24 * 12; // Five-minute samples for 90 days.
-const VELOCITY_STATUS_MAX_AGE_MS = 30 * 1000;
+const VELOCITY_STATUS_MAX_AGE_MS = 180 * 1000;
+const VELOCITY_STATUS_WRITE_INTERVAL_MS = 120 * 1000;
 
 const readHistory = async (env, key) => {
   if (!env.STATUS_KV) return [];
@@ -14,7 +16,7 @@ const readHistory = async (env, key) => {
 
 const readVelocityStatus = async (env) => {
   if (!env.STATUS_KV) return null;
-  const snapshot = await env.STATUS_KV.get('velocity:latest', 'json');
+  const snapshot = await env.STATUS_KV.get('velocity:latest', 'json', { cacheTtl: 30 });
   const receivedAt = Date.parse(snapshot?.receivedAt);
   const age = Date.now() - receivedAt;
   if (!snapshot || !Number.isFinite(receivedAt) || age < 0 || age > VELOCITY_STATUS_MAX_AGE_MS) return null;
@@ -97,20 +99,18 @@ const makeServices = async (env, minecraft, velocityStatus) => {
     checkUrl(env.SHOP_HEALTH_URL),
   ]);
   const mainSnapshot = velocityStatus?.main;
-  const loginSnapshot = velocityStatus?.login;
+  const queueSnapshot = velocityStatus?.queue;
   const mainServer = mainSnapshot
     ? { configured: mainSnapshot.status !== 'unconfigured', up: snapshotUp(mainSnapshot), players: mainSnapshot.players, responseTimeMs: null, source: 'velocity' }
     : { configured: true, up: minecraft.up, players: minecraft.players, responseTimeMs: minecraft.responseTimeMs, source: minecraft.source };
-  const loginServer = loginSnapshot
-    ? { configured: loginSnapshot.status !== 'unconfigured', up: snapshotUp(loginSnapshot), players: loginSnapshot.players, responseTimeMs: null, source: 'velocity' }
-    : { configured: true, up: null, players: null, responseTimeMs: null, source: 'velocity' };
-  const queue = queueCheck || { configured: true, up: mainServer.up, responseTimeMs: mainServer.responseTimeMs, derived: true };
+  const queue = queueSnapshot
+    ? { configured: queueSnapshot.status !== 'unconfigured', up: snapshotUp(queueSnapshot), responseTimeMs: null, source: 'velocity' }
+    : queueCheck || { configured: true, up: mainServer.up, responseTimeMs: mainServer.responseTimeMs, derived: true };
   const minecraftGroup = { configured: true, up: mainServer.up === false || queue.up === false ? false : (mainServer.up && queue.up ? true : null) };
   return [
     { id: 'minecraft', name: 'Minecraft', ...minecraftGroup },
     { id: 'queue', name: 'Queue', ...queue, players: minecraft.queuePlayers },
     { id: 'main-server', name: 'Main server', ...mainServer },
-    { id: 'login-server', name: 'Login server', ...loginServer },
     { id: 'website', name: 'Website', ...website },
     { id: 'shop', name: 'Shop', ...shop },
   ].map((service) => ({ ...service, status: toStatus(service) }));
@@ -137,11 +137,11 @@ const currentStatus = async (env) => {
   };
 };
 
-const trimSamples = (samples, now = Date.now()) => samples
-  .filter((sample) => Date.parse(sample.ts || sample.timestamp) >= now - RETENTION_MS)
+const trimSamples = (samples, now = Date.now(), retentionMs = RETENTION_MS) => samples
+  .filter((sample) => Date.parse(sample.ts || sample.timestamp) >= now - retentionMs)
   .slice(-MAX_SAMPLES);
 
-const serviceHistoryKey = (serviceId) => serviceId === 'main-server' ? 'minecraft' : serviceId === 'minecraft' ? 'minecraft-group' : serviceId;
+const serviceHistoryKey = (serviceId) => `uptime-v2:${serviceId === 'main-server' ? 'minecraft' : serviceId === 'minecraft' ? 'minecraft-group' : serviceId}`;
 
 const recordIncidents = async (env, services, timestamp) => {
   if (!env.STATUS_KV) return;
@@ -164,7 +164,7 @@ const persistStatus = async (env, status) => {
   const timestamp = status.checkedAt;
   await Promise.all(status.services.map(async (service) => {
     if (service.configured === false) return;
-    const history = trimSamples(await readHistory(env, serviceHistoryKey(service.id)));
+    const history = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), Date.now(), SERVICE_HISTORY_RETENTION_MS);
     history.push({ ts: timestamp, status: service.status, up: service.up });
     await env.STATUS_KV.put(`history:${serviceHistoryKey(service.id)}`, JSON.stringify(history.slice(-MAX_SAMPLES)));
   }));
@@ -191,8 +191,8 @@ const dailyServiceHistory = (samples, now) => {
     else if (sampleStatus === 'degraded' || current.status === 'degraded') current.status = 'degraded';
     byDay.set(day, current);
   }
-  return Array.from({ length: 90 }, (_, index) => {
-    const day = new Date(now - (89 - index) * 86400000).toISOString().slice(0, 10);
+  return Array.from({ length: 7 }, (_, index) => {
+    const day = new Date(now - (6 - index) * 86400000).toISOString().slice(0, 10);
     return byDay.get(day) || { timestamp: `${day}T00:00:00.000Z`, status: 'unknown' };
   });
 };
@@ -200,7 +200,7 @@ const dailyServiceHistory = (samples, now) => {
 const toDashboardPayload = async (env, status) => {
   const now = Date.now();
   const services = await Promise.all(status.services.map(async (service) => {
-    const samples = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), now);
+    const samples = trimSamples(await readHistory(env, serviceHistoryKey(service.id)), now, SERVICE_HISTORY_RETENTION_MS);
     const uptimePercent = samples.length
       ? Number(((samples.filter((item) => item.status === 'operational' || item.up === true).length / samples.length) * 100).toFixed(2))
       : null;
@@ -224,11 +224,15 @@ const toDashboardPayload = async (env, status) => {
 const toLegacyDashboardPayload = async (env, status) => {
   const serviceById = Object.fromEntries(status.services.map((service) => [service.id, service]));
   const now = Date.now();
-  const legacyService = async (serviceId, historyId = serviceId, extra = {}) => {
+  const legacyService = async (serviceId, extra = {}) => {
     const service = serviceById[serviceId];
-    const history = trimSamples(await readHistory(env, historyId), now).slice(-90);
-    const uptime = history.length
-      ? Number(((history.filter((sample) => sample.up === true).length / history.length) * 100).toFixed(2))
+    const samples = trimSamples(await readHistory(env, serviceHistoryKey(serviceId)), now, SERVICE_HISTORY_RETENTION_MS);
+    const history = dailyServiceHistory(samples, now).map((sample) => ({
+      ts: sample.timestamp,
+      up: sample.status === 'operational' ? true : sample.status === 'outage' ? false : null,
+    }));
+    const uptime = samples.length
+      ? Number(((samples.filter((sample) => sample.up === true).length / samples.length) * 100).toFixed(2))
       : null;
     return {
       configured: service?.configured !== false,
@@ -240,15 +244,12 @@ const toLegacyDashboardPayload = async (env, status) => {
       ...extra,
     };
   };
-  const [minecraft, queue, login, website, shop] = await Promise.all([
-    legacyService('main-server', 'minecraft', {
+  const [minecraft, queue, website, shop] = await Promise.all([
+    legacyService('main-server', {
       players: status.playerCount.online,
       queuePlayers: serviceById.queue?.players ?? null,
     }),
     legacyService('queue'),
-    legacyService('login-server', 'login-server', {
-      players: serviceById['login-server']?.players ?? null,
-    }),
     legacyService('website'),
     legacyService('shop'),
   ]);
@@ -260,7 +261,7 @@ const toLegacyDashboardPayload = async (env, status) => {
   return {
     checkedAt: status.checkedAt,
     hasHistory: Boolean(env.STATUS_KV),
-    services: { minecraft, queue, login, website, shop },
+    services: { minecraft, queue, website, shop },
     metrics,
   };
 };
@@ -311,16 +312,23 @@ export default {
       const validSnapshot = (snapshot) => snapshot &&
         ['checking', 'online', 'offline', 'unconfigured'].includes(snapshot.status) &&
         Number.isInteger(snapshot.players) && snapshot.players >= 0 && snapshot.players <= 100000;
-      if (!validSnapshot(payload?.main) || !validSnapshot(payload?.login)) {
+      const validQueueSnapshot = (snapshot) => snapshot &&
+        ['checking', 'online', 'offline', 'unconfigured'].includes(snapshot.status);
+      if (!validSnapshot(payload?.main) || !validQueueSnapshot(payload?.queue)) {
         return json({ error: 'invalid_status_payload' }, { status: 400 });
+      }
+      const previous = await env.STATUS_KV.get('velocity:latest', 'json', { cacheTtl: 30 });
+      const previousAt = Date.parse(previous?.receivedAt);
+      if (Number.isFinite(previousAt) && Date.now() - previousAt < VELOCITY_STATUS_WRITE_INTERVAL_MS) {
+        return json({ ok: true, stored: false }, { headers: { 'cache-control': 'no-store' } });
       }
       const snapshot = {
         main: { status: payload.main.status, players: payload.main.players },
-        login: { status: payload.login.status, players: payload.login.players },
+        queue: { status: payload.queue.status },
         receivedAt: new Date().toISOString(),
       };
-      await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 120 });
-      return json({ ok: true, receivedAt: snapshot.receivedAt }, { headers: { 'cache-control': 'no-store' } });
+      await env.STATUS_KV.put('velocity:latest', JSON.stringify(snapshot), { expirationTtl: 240 });
+      return json({ ok: true, stored: true, receivedAt: snapshot.receivedAt }, { headers: { 'cache-control': 'no-store' } });
     }
 
     if (url.pathname === '/api/status') {
