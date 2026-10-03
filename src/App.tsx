@@ -897,7 +897,7 @@ export default function App() {
   const t = translations[lang];
 
   if (localizedPath === '/status') {
-    return <StatusPage lang={lang} />;
+    return <StatusPage lang={lang} onToggleLanguage={handleLanguageToggle} />;
   }
 
   return (
