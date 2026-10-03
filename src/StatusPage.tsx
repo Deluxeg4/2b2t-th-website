@@ -28,17 +28,19 @@ const statusGroups = [
 
 function UptimeBars({ history, isThai }: { history: { ts: string; up: boolean | null }[]; isThai: boolean }) {
   const historyAvailable = history.some((item) => item.up !== null);
-  const bars = history.length ? history.slice(-90) : Array.from({ length: 90 }, () => ({ ts: '', up: null }));
+  const bars = history.length ? history.slice(-7) : Array.from({ length: 7 }, () => ({ ts: '', up: null }));
   return <div className="status-bars-wrap">
-    <div className="status-bars" role="img" aria-label={historyAvailable ? (isThai ? 'ประวัติ uptime 90 วัน' : '90 day uptime history') : (isThai ? 'ยังไม่มีประวัติ uptime' : 'No uptime history configured')}>
+    <div className="status-bars" role="img" aria-label={historyAvailable ? (isThai ? 'ประวัติ uptime 7 วัน' : '7 day uptime history') : (isThai ? 'ยังไม่มีประวัติ uptime' : 'No uptime history configured')}>
       {bars.map((item, index) => {
         const state = !historyAvailable || item.up === null ? 'unknown' : item.up ? 'up' : 'down';
-        const date = item.ts ? new Date(item.ts).toLocaleDateString(isThai ? 'th-TH' : 'en-US') : '';
+        const date = item.ts && Number.isFinite(Date.parse(item.ts))
+          ? new Date(item.ts).toLocaleString(isThai ? 'th-TH' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '';
         const label = state === 'up' ? (isThai ? 'ออนไลน์' : 'Operational') : state === 'down' ? (isThai ? 'ออฟไลน์' : 'Outage') : (isThai ? 'ไม่มีข้อมูล' : 'No data');
-        return <span key={index} className={`status-bar ${state}`} title={date ? `${date}: ${label}` : label} />;
+        return <span key={index} className={`status-bar ${state}`} title={date ? `${date}: ${label}` : label} aria-label={date ? `${date}: ${label}` : label} />;
       })}
     </div>
-    <div className="status-bars-labels"><span>{isThai ? '90 วันที่แล้ว' : '90 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
+    <div className="status-bars-labels"><span>{isThai ? '7 วันที่แล้ว' : '7 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
   </div>;
 }
 
