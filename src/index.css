@@ -185,3 +185,107 @@
   .metrics-chart { padding-left: 34px; padding-right: 4px; }
   .chart-labels { gap: 4px; font-size: 8px; }
 }
+
+/* Status reference treatment: restrained black surfaces, uptime history, and a filled player chart. */
+.status-page { min-height: 100vh; background: #050608; color: #e5e7eb; font-family: Inter, "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif; }
+.status-container { width: min(100% - 56px, 1160px); }
+.status-header { height: 68px; background: #07090d; border-color: #171c24; }
+.status-brand { display: block; padding: 4px 5px; background: #fff; }
+.status-nav a { color: #a3aab6; }
+.status-nav a:hover, .status-nav a.active { color: #f5f6f8; }
+.status-nav a.active::after { background: #00c987; }
+.language-switch { background: #0a0d12; border-color: #202632; }
+.language-switch a { color: #a3aab6; }
+.language-switch a.selected { background: #161d28; color: #f5f6f8; }
+.status-main { padding: 34px 0 26px; }
+.status-main h1 { color: #f5f6f8; font-size: 30px; }
+.status-heading p { color: #8b93a1; }
+.status-refresh { background: #0a0d12; border-color: #262d39; color: #dce1e8; }
+.status-refresh:hover { background: #111720; }
+.status-page button:focus-visible, .status-page a:focus-visible { outline-color: #00c987; }
+.status-overall { color: #54dba2; background: #08150f; border-color: #153e2b; }
+.status-overall-down { color: #ff938a; background: #1b0d0d; border-color: #512321; }
+.status-overall-unknown { color: #bdc4cf; background: #10151d; border-color: #272f3b; }
+.status-overall p { color: #98a2b1; }
+.status-group { margin: 26px 0 0; padding: 0 20px 17px; background: #050608; border: 1px solid #1a202a; border-radius: 0; }
+.status-group + .status-group { margin-top: 10px; }
+.status-group h2 { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; color: #e5e7eb; background: transparent; border-bottom: 1px solid #171c24; font-size: 16px; }
+.status-group-title { display: inline-flex; align-items: center; gap: 9px; }
+.status-group h2 svg { color: #bfc5ce; }
+.status-row { display: block; min-height: 0; padding: 15px 0 13px; background: transparent; border: 0; border-bottom: 1px solid #11161e; font-size: 14px; }
+.status-row:last-child { border-bottom: 0; }
+.status-row-main { display: flex; min-height: 0; justify-content: space-between; gap: 16px; margin-bottom: 9px; }
+.status-service-name { display: flex; flex-direction: column; gap: 4px; }
+.status-service-name small { color: #8993a2; font-size: 11px; }
+.status-operational { color: #d8dce3; gap: 8px; }
+.status-operational i { position: relative; display: inline-grid; width: 14px; height: 14px; flex: 0 0 14px; place-items: center; border-radius: 50%; background: #00d49b; }
+.status-operational.up i::after { content: "✓"; color: #032018; font-size: 10px; font-style: normal; font-weight: 800; line-height: 1; }
+.status-operational.down { color: #ffaaa2; }
+.status-operational.down i { background: #fb5865; }
+.status-operational.unknown { color: #a4adba; }
+.status-operational.unknown i { background: #747d8a; }
+.status-service-name .status-operational { font-size: 14px; font-weight: 500; }
+.status-service-meta { gap: 12px; }
+.status-uptime { color: #00d49b; font-size: 14px; font-weight: 600; }
+.status-bars-wrap { width: 100%; min-width: 0; }
+.status-bars { height: 34px; gap: 2px; }
+.status-bar { height: 100%; min-width: 0; border-radius: 0; background: #008f68; }
+.status-bar.down { background: #f04452; }
+.status-bar.unknown { background: #222832; }
+.status-bars-labels { margin-top: 6px; color: #8b93a1; font-size: 11px; }
+.status-history-key { display: none; }
+.metrics-panel { margin-top: 28px; padding: 18px 20px 12px; background: #050608; border: 1px solid #1a202a; border-radius: 0; }
+.panel-title { padding: 0 0 14px; border: 0; }
+.panel-title h2 { color: #dce1e8; font-size: 13px; font-weight: 500; letter-spacing: .035em; text-transform: uppercase; }
+.range-tabs { gap: 0; padding: 3px; border: 1px solid #202632; border-radius: 24px; background: #050608; }
+.range-tabs button { height: 30px; min-width: 62px; padding: 0 14px; border: 0; border-radius: 18px; color: #d1d5dd; font-size: 12px; }
+.range-tabs button.selected { color: #f6f7f9; background: #151c28; font-weight: 600; }
+.metrics-chart { padding: 0 0 5px; }
+.chart-overview { display: flex; align-items: center; justify-content: space-between; padding: 0 0 14px; color: #f2f4f7; font-size: 15px; font-weight: 600; }
+.chart-overview span { font-variant-numeric: tabular-nums; }
+.metrics-chart svg { height: 150px; overflow: visible; }
+.chart-area { fill: url(#player-area-fill); }
+.chart-line { stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.chart-line-primary { stroke: #79808e; }
+.chart-crosshair { stroke: #969da8; stroke-width: 1; }
+.chart-hover-point { fill: #a3abb9; stroke: #394150; stroke-width: 2; }
+.chart-tooltip rect { fill: #111722; stroke: #283244; stroke-width: 1; }
+.chart-tooltip text { fill: #eef1f6; font-family: Inter, "Noto Sans Thai", sans-serif; font-size: 12px; font-weight: 500; }
+.chart-tooltip circle { fill: #747e8e; }
+.chart-labels { color: #858d9b; font-size: 10px; }
+.chart-no-data { color: #9098a5; }
+.status-history-note { color: #858d9b; }
+.status-footer { border-color: #1a202a; color: #818a98; }
+.status-footer a { color: #b5bdc8; }
+.status-footer a:hover { color: #f3f5f8; }
+
+@media (max-width: 720px) {
+  .status-page { overflow-x: clip; }
+  .status-container { width: calc(100vw - 28px) !important; max-width: 1160px; box-sizing: border-box; }
+  .status-header { height: 64px; }
+  .status-header-inner, .status-header-actions { min-width: 0; }
+  .status-brand { padding: 3px 4px; }
+  .status-brand img { width: 104px; }
+  .status-header-actions { gap: 9px; }
+  .status-nav { gap: 0; }
+  .status-nav a:not(.active) { display: none; }
+  .status-nav a.active::after { display: none; }
+  .language-switch { display: none; }
+  .status-heading { align-items: stretch; flex-direction: column; }
+  .status-refresh { width: fit-content; }
+  .status-main { padding-top: 23px; }
+  .status-overall, .status-group, .metrics-panel { width: 100%; max-width: calc(100vw - 28px) !important; min-width: 0; box-sizing: border-box; }
+  .status-group { padding: 0 13px 13px; }
+  .status-group h2 { padding: 13px 0; }
+  .status-row, .status-row-main, .status-service-name, .status-service-meta, .status-bars-wrap { min-width: 0; }
+  .status-row-main { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 6px; }
+  .status-service-meta { justify-content: flex-start; }
+  .status-row { padding: 12px 0; }
+  .status-bars { height: 26px; gap: 1px; }
+.status-bars .status-bar:nth-child(-n + 30) { display: block; }
+  .metrics-panel { padding: 15px 13px 10px; }
+  .panel-title { align-items: center; }
+  .range-tabs button { min-width: 48px; height: 28px; padding: 0 10px; }
+  .metrics-chart svg { height: 120px; }
+  .status-main .panel-title { flex-wrap: nowrap; }
+}

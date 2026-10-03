@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, AlertCircle, CheckCircle2, Globe2, RefreshCw, Server } from 'lucide-react';
+import { Activity, AlertCircle, CheckCircle2, CircleChevronDown, RefreshCw } from 'lucide-react';
 import logoImage from './assets/server-logo.png?url';
 
 type Sample = { ts: string; up: boolean | null };
@@ -11,11 +11,12 @@ type Status = { checkedAt: string; services: Record<string, Service>; metrics: M
 type Range = 'day' | 'week' | 'month';
 
 function History({ history, isThai }: { history: Sample[]; isThai: boolean }) {
-  const recent = history.slice(-7);
-  return <div className="status-bars-wrap"><div className="status-bars" aria-label={isThai ? `ประวัติ uptime 7 วัน` : `7-day uptime history`}>
-    {Array.from({ length: 7 - recent.length }, (_, index) => <span key={`empty-${index}`} className="status-bar unknown" />)}
+  const recent = history.slice(-90);
+  const missing = Math.max(0, 90 - recent.length);
+  return <div className="status-bars-wrap"><div className="status-bars" role="img" aria-label={isThai ? `ประวัติ uptime 90 วัน` : `90-day uptime history`}>
+    {Array.from({ length: missing }, (_, index) => <span key={`empty-${index}`} className="status-bar unknown" />)}
     {recent.map((sample, index) => <span key={index} className={`status-bar ${sample.up === null ? 'unknown' : sample.up ? 'up' : 'down'}`} title={`${new Date(sample.ts).toLocaleString(isThai ? 'th-TH' : 'en-US')} · ${sample.up ? (isThai ? 'ทำงานปกติ' : 'Operational') : (isThai ? 'ออฟไลน์' : 'Offline')}`} />)}
-  </div><div className="status-bars-labels"><span>{isThai ? '7 วันที่แล้ว' : '7 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div></div>;
+  </div><div className="status-bars-labels"><span>{isThai ? '90 วันที่แล้ว' : '90 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div></div>;
 }
 
 function PlayerChart({ metrics, range, isThai }: { metrics: Metric[]; range: Range; isThai: boolean }) {
@@ -41,11 +42,14 @@ function PlayerChart({ metrics, range, isThai }: { metrics: Metric[]; range: Ran
     setHoveredIndex(nearest);
   };
   const format = (value: number) => new Date(value).toLocaleString(isThai ? 'th-TH' : 'en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
+  const areaPath = points.length ? `${linePath} L ${points[points.length - 1].x} 108 L ${points[0].x} 108 Z` : '';
   return <div className="metrics-chart">
-    {visible.length > 0 ? <><div className="chart-scale">{[1, .75, .5, .25, 0].map(ratio => <span key={ratio}>{maximum * ratio}</span>)}</div><svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img" onMouseMove={updateHover} onMouseLeave={() => setHoveredIndex(null)} aria-label={isThai ? `กราฟผู้เล่น ${visible.length} จุดข้อมูล` : `Player history, ${visible.length} samples`}>
-      {[10, 35, 60, 85, 108].map(y => <line key={y} x1="0" y1={y} x2="900" y2={y} className="chart-grid" />)}
+    {visible.length > 0 ? <><div className="chart-overview"><strong>2b2t</strong><span>~ {chartValues[chartValues.length - 1].players.toLocaleString()} {isThai ? 'ผู้เล่น' : 'players'}</span></div><svg viewBox="0 0 900 110" preserveAspectRatio="none" role="img" onMouseMove={updateHover} onMouseLeave={() => setHoveredIndex(null)} aria-label={isThai ? `กราฟผู้เล่น ${visible.length} จุดข้อมูล` : `Player history, ${visible.length} samples`}>
+      <defs><linearGradient id="player-area-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#9ba3b2" stopOpacity=".18" /><stop offset="100%" stopColor="#9ba3b2" stopOpacity=".015" /></linearGradient></defs>
+      <path d={areaPath} className="chart-area" />
       <polyline points={points.map(point => `${point.x},${point.y}`).join(' ')} className="chart-line chart-line-primary" />
-      {hoverPoint && hovered && <><line x1={hoverPoint.x} y1="10" x2={hoverPoint.x} y2="108" className="chart-crosshair" /><circle cx={hoverPoint.x} cy={hoverPoint.y} r="4.5" className="chart-hover-point" /><text x={Math.min(820, hoverPoint.x + 8)} y={Math.max(18, hoverPoint.y - 8)} className="chart-hover-label">{`${hovered.players.toLocaleString()} ${isThai ? 'ผู้เล่น' : 'players'}`}</text></>}
+      {hoverPoint && hovered && <><line x1={hoverPoint.x} y1="5" x2={hoverPoint.x} y2="108" className="chart-crosshair" /><circle cx={hoverPoint.x} cy={hoverPoint.y} r="4.5" className="chart-hover-point" /><g className="chart-tooltip" transform={`translate(${Math.max(4, Math.min(732, hoverPoint.x + 12))} ${Math.max(8, hoverPoint.y - 43)})`}><rect width="164" height="66" rx="7" /><text x="14" y="25">{format(Date.parse(hovered.ts))}</text><circle cx="18" cy="48" r="3.5" /><text x="31" y="52">{`${hovered.players.toLocaleString()} ${isThai ? 'ผู้เล่น' : 'players'}`}</text></g></>}
       {points.length === 1 && <circle cx={points[0].x} cy={points[0].y} r="3" fill="#19b96b" />}
     </svg><div className="chart-labels"><span>{format(first)}</span><span>{last !== first ? format(last) : ''}</span></div></> : <div className="chart-no-data">{isThai ? 'ยังไม่มีข้อมูลผู้เล่นในช่วงเวลานี้' : 'No player data for this period'}</div>}
   </div>;
@@ -94,8 +98,8 @@ export default function StatusPage({ lang }: { lang: 'en' | 'th' }) {
   const SummaryIcon = state === 'up' ? CheckCircle2 : state === 'down' || failed ? AlertCircle : Activity;
   const summary = failed ? t('ไม่สามารถอัปเดตสถานะได้', 'Unable to update status') : !data ? t('กำลังตรวจสอบสถานะระบบ', 'Checking system status') : down ? t('บางบริการขัดข้อง', 'Some services are offline') : healthy ? t('บริการที่ตรวจสอบทำงานปกติ', 'Monitored services are operational') : t('ยังยืนยันสถานะบางบริการไม่ได้', 'Some service statuses are unknown');
   const groups = [
-    { name: 'Minecraft', icon: <Server size={20} />, items: [{ id: 'minecraft', name: t('เซิร์ฟเวอร์หลัก', 'Main server') }, { id: 'queue', name: t('ระบบคิว', 'Queue') }] },
-    { name: t('เว็บไซต์และร้านค้า', 'Website & shop'), icon: <Globe2 size={20} />, items: [{ id: 'website', name: t('เว็บไซต์', 'Website') }, { id: 'shop', name: t('ร้านค้า', 'Shop') }] },
+    { name: 'Minecraft', items: [{ id: 'minecraft', name: t('เซิร์ฟเวอร์หลัก', 'Main server') }, { id: 'queue', name: t('ระบบคิว', 'Queue') }] },
+    { name: t('เว็บไซต์และร้านค้า', 'Website & shop'), items: [{ id: 'website', name: t('เว็บไซต์', 'Website') }, { id: 'shop', name: t('ร้านค้า', 'Shop') }] },
   ];
 
   return <div className="status-page">
@@ -103,16 +107,13 @@ export default function StatusPage({ lang }: { lang: 'en' | 'th' }) {
     <main className="status-container status-main">
       <div className="status-heading"><div><h1>{t('สถานะระบบ', 'System status')}</h1><p>{t('ติดตามความพร้อมใช้งานของ 2b2t-th', 'Service availability across 2b2t-th')}</p></div><button className="status-refresh" disabled={loading} onClick={() => setRefresh(value => value + 1)}><RefreshCw size={16} />{loading ? t('กำลังตรวจสอบ', 'Checking') : t('รีเฟรชสถานะ', 'Refresh status')}</button></div>
       <div className={`status-overall status-overall-${state}`} role="status" aria-live="polite"><SummaryIcon size={28} /><div><strong>{summary}</strong><p>{failed ? data ? t('แสดงข้อมูลจากการตรวจสอบครั้งก่อน กดลองใหม่เพื่ออัปเดต', 'Showing the last successful check. Retry to update.') : t('ดึงข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', 'Could not retrieve status. Please try again.') : t('ตรวจสอบอัตโนมัติทุก 60 วินาที', 'Automatically checks every 60 seconds')}</p></div>{failed && <button className="status-refresh" disabled={loading} onClick={() => setRefresh(value => value + 1)}>{t('ลองใหม่', 'Retry')}</button>}</div>
-      <div className="status-table-summary">{t('บริการที่กำลังติดตาม', 'Monitored services')} <strong>{groups.reduce((total, group) => total + group.items.length, 0)}</strong> {t('รายการ', 'services')}</div>
-      {groups.map(group => <section className="status-group" key={group.name}><h2>{group.icon}{group.name}</h2><div className="status-table-head"><span>{t('บริการ', 'Service')}</span><span>{t('สถานะ', 'Status')}</span><span>{t('ข้อมูลล่าสุด', 'Latest data')}</span></div>{group.items.map(service => {
+      {groups.map(group => <section className="status-group" key={group.name}><h2><span className="status-group-title"><CircleChevronDown size={16} />{group.name}</span></h2>{group.items.map(service => {
         const item = data?.services[service.id];
         const serviceState = !item?.configured || item.up == null ? 'unknown' : item.up ? 'up' : 'down';
         const label = item?.configured === false ? t('ยังไม่เปิดตรวจสอบ', 'Not monitored') : serviceState === 'unknown' ? t('ไม่มีข้อมูล', 'Unknown') : serviceState === 'up' ? t('ทำงานปกติ', 'Operational') : t('ออฟไลน์', 'Offline');
-        return <div className="status-row" key={service.id}><div className="status-row-main"><div className="status-service-name"><strong>{service.name}</strong>{item?.derived && <small>{t('อ้างอิงสถานะเซิร์ฟเวอร์', 'Based on server status')}</small>}</div><div className="status-service-meta"><span className={`status-operational ${serviceState}`}><i />{label}</span><span className="status-uptime">{service.id === 'minecraft' && item?.players != null ? `${item.players.toLocaleString()} ${t('ผู้เล่น', 'players')}` : item?.uptime != null ? `${item.uptime}% ${t('พร้อมใช้งาน', 'uptime')}` : '—'}</span></div></div><div className="status-row-history"><strong>{service.name}</strong><span>{t('ประวัติ uptime 7 วัน', '7-day uptime history')}</span><History history={item?.history ?? []} isThai={isThai} /></div></div>;
+        return <div className="status-row" key={service.id}><div className="status-row-main"><div className="status-service-name"><span className={`status-operational ${serviceState}`} aria-label={`${service.name}: ${label}`} title={label}><i />{service.name}</span>{item?.derived && <small>{t('อ้างอิงสถานะเซิร์ฟเวอร์', 'Based on server status')}</small>}</div><div className="status-service-meta"><span className="status-uptime">{item?.uptime != null ? `${item.uptime.toFixed(1)}% ${t('uptime', 'uptime')}` : '—'}</span></div></div><History history={item?.history ?? []} isThai={isThai} /></div>;
       })}</section>)}
-      <div className="status-history-key"><span><i className="up" />{t('ปกติ', 'Operational')}</span><span><i className="down" />{t('ขัดข้อง', 'Offline')}</span><span><i className="unknown" />{t('ไม่มีข้อมูล', 'No data')}</span><p>{t('แต่ละแท่งแทนการตรวจสอบหนึ่งครั้ง', 'Each bar represents one check')}</p></div>
-      <div className="status-history-key"><span><i className="up" />{t('ปกติ', 'Operational')}</span><span><i className="down" />{t('ขัดข้อง', 'Outage')}</span><span><i className="unknown" />{t('ไม่มีข้อมูล', 'No data')}</span><p>{t('แต่ละแท่งแสดงสถานะของหนึ่งวัน', 'Each bar shows one day of service history')}</p></div>
-      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{t('จำนวนผู้เล่น', 'Player activity')}</h2><span><Activity size={16} />{data?.services.minecraft?.players == null ? '—' : `${data.services.minecraft.players.toLocaleString()} ${t('ผู้เล่นล่าสุด', 'players at last check')}`}</span></div><div className="range-tabs" role="group" aria-label={t('ช่วงเวลาของกราฟ', 'Chart period')}>{(['day', 'week', 'month'] as const).map(value => <button key={value} aria-pressed={range === value} className={range === value ? 'selected' : ''} onClick={() => setRange(value)}>{value === 'day' ? t('24 ชั่วโมง', '24 hours') : value === 'week' ? t('7 วัน', '7 days') : t('30 วัน', '30 days')}</button>)}</div><div className="chart-legend"><span className="legend-primary" />{t('จำนวนผู้เล่นจากข้อมูลที่บันทึกไว้', 'Players from recorded checks')}</div><PlayerChart metrics={data?.metrics ?? []} range={range} isThai={isThai} /></section>
+      <section className="status-panel metrics-panel"><div className="panel-title"><h2>{t('ตัวชี้วัดระบบ', 'System metrics')}</h2><div className="range-tabs" role="group" aria-label={t('ช่วงเวลาของกราฟ', 'Chart period')}>{(['month', 'week', 'day'] as const).map(value => <button key={value} aria-pressed={range === value} className={range === value ? 'selected' : ''} onClick={() => setRange(value)}>{t(value === 'month' ? 'เดือน' : value === 'week' ? 'สัปดาห์' : 'วัน', value)}</button>)}</div></div><PlayerChart metrics={data?.metrics ?? []} range={range} isThai={isThai} /></section>
       <p className="status-history-note">{t('กราฟแสดงเฉพาะข้อมูลที่มีการบันทึกไว้ในช่วงเวลาที่เลือก', 'The chart only shows available samples within the selected period.')}</p>
     </main><footer className="status-container status-footer"><span>© 2026 2b2t-th Thailand Community</span><span>{data ? `${t('ตรวจล่าสุด', 'Last checked')} ${new Date(data.checkedAt).toLocaleString(isThai ? 'th-TH' : 'en-US')}` : t('ยังไม่มีผลการตรวจสอบ', 'No check results yet')}</span><Link to={`/${isThai ? 'en' : 'th'}/status`} lang={isThai ? 'en' : 'th'}>{isThai ? 'English' : 'ภาษาไทย'}</Link></footer>
   </div>;
