@@ -37,7 +37,7 @@ function UptimeBars({ history, isThai }: { history: { ts: string; up: boolean | 
           ? new Date(item.ts).toLocaleString(isThai ? 'th-TH' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
           : '';
         const label = state === 'up' ? (isThai ? 'ออนไลน์' : 'Operational') : state === 'down' ? (isThai ? 'ออฟไลน์' : 'Outage') : (isThai ? 'ไม่มีข้อมูล' : 'No data');
-        return <span key={index} className={`status-bar ${state}`} title={date ? `${date}: ${label}` : label} aria-label={date ? `${date}: ${label}` : label} />;
+        return <span key={index} className={`status-bar ${state}`} data-tooltip={date ? `${date}: ${label}` : label} aria-label={date ? `${date}: ${label}` : label} />;
       })}
     </div>
     <div className="status-bars-labels"><span>{isThai ? '7 วันที่แล้ว' : '7 days ago'}</span><span>{isThai ? 'วันนี้' : 'Today'}</span></div>
